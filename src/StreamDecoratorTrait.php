@@ -33,25 +33,7 @@ trait StreamDecoratorTrait
 
     public function getContents($maxLength = -1)
     {
-        $buffer = '';
-
-        while (!$this->eof()) {
-            if ($maxLength === -1) {
-                $read = 1048576;
-            } else {
-                $len = strlen($buffer);
-                if ($len == $maxLength) {
-                    break;
-                }
-                $read = min(1048576, $maxLength - $len);
-            }
-            if ('' === ($line = $this->read($read))) {
-                break;
-            }
-            $buffer .= $line;
-        }
-
-        return $buffer;
+        return copy_to_string($this, $maxLength);
     }
 
     /**

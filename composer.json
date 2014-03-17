@@ -18,6 +18,7 @@
         "phpunit/phpunit": "4.*"
     },
     "autoload": {
-        "psr-4": { "GuzzleHttp\\Stream\\": "src/" }
+        "psr-4": { "GuzzleHttp\\Stream\\": "src/" },
+        "files": ["src/functions.php"]
     }
 }

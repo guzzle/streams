@@ -48,42 +48,7 @@ class Stream implements MetadataStreamInterface
      */
     public static function factory($resource = '', $size = null)
     {
-        switch (gettype($resource)) {
-            case 'string':
-                return self::fromString($resource);
-            case 'resource':
-                $result = new static($resource, $size);
-                break;
-            case 'object':
-                if ($resource instanceof StreamInterface) {
-                    $result = $resource;
-                    break;
-                } elseif (method_exists($resource, '__toString')) {
-                    return self::fromString((string) $resource);
-                }
-            default:
-                throw new \InvalidArgumentException('Invalid resource type');
-        }
-
-        return $result;
-    }
-
-    /**
-     * Create a new stream from a string
-     *
-     * @param string $string String of data
-     *
-     * @return StreamInterface
-     */
-    public static function fromString($string)
-    {
-        $stream = fopen('php://temp', 'r+');
-        if ($string !== '') {
-            fwrite($stream, $string);
-            fseek($stream, 0);
-        }
-
-        return new static($stream);
+        return create($resource, $size);
     }
 
     /**
@@ -229,62 +194,5 @@ class Stream implements MetadataStreamInterface
         return !$key
             ? $this->meta
             : (isset($this->meta[$key]) ? $this->meta[$key] : null);
-    }
-
-    /**
-     * Calculate a hash of a Stream
-     *
-     * @param StreamInterface $stream    Stream to calculate the hash for
-     * @param string          $algo      Hash algorithm (e.g. md5, crc32, etc)
-     * @param bool            $rawOutput Whether or not to use raw output
-     *
-     * @return bool|string Returns false on failure or a hash string on success
-     */
-    public static function getHash(
-        StreamInterface $stream,
-        $algo,
-        $rawOutput = false
-    ) {
-        $pos = $stream->tell();
-        if (!$stream->seek(0)) {
-            return false;
-        }
-
-        $ctx = hash_init($algo);
-        while ($data = $stream->read(1048576)) {
-            hash_update($ctx, $data);
-        }
-
-        $out = hash_final($ctx, (bool) $rawOutput);
-        $stream->seek($pos);
-
-        return $out;
-    }
-
-    /**
-     * Read a line from the stream up to the maximum allowed buffer length
-     *
-     * @param StreamInterface $stream    Stream to read from
-     * @param int             $maxLength Maximum buffer length
-     *
-     * @return string|bool
-     */
-    public static function readLine(StreamInterface $stream, $maxLength = null)
-    {
-        $buffer = '';
-        $size = 0;
-
-        while (!$stream->eof()) {
-            if (false === ($byte = $stream->read(1))) {
-                return $buffer;
-            }
-            $buffer .= $byte;
-            // Break when a new line is found or the max length - 1 is reached
-            if ($byte == PHP_EOL || ++$size == $maxLength - 1) {
-                break;
-            }
-        }
-
-        return $buffer;
     }
 }
