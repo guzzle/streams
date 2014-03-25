@@ -17,7 +17,7 @@ Simply add the following to the composer.json file at the root of your project:
 
     {
       "require": {
-        "guzzlehttp/streams": "1.0.0-rc.1"
+        "guzzlehttp/streams": "1.*"
       }
     }
 
@@ -28,3 +28,9 @@ Documentation
 
 The documentation for this package can be found on the main Guzzle website at
 http://docs.guzzlephp.org/en/guzzle4/streams.html.
+
+Testing
+=======
+
+This library is tested using PHPUnit. You'll need to install the dependencies
+using `Composer <http://getcomposer.org>`_ then run ``make test``.

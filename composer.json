@@ -20,5 +20,10 @@
     "autoload": {
         "psr-4": { "GuzzleHttp\\Stream\\": "src/" },
         "files": ["src/functions.php"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }
