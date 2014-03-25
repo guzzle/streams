@@ -1,8 +1,5 @@
 all: clean coverage
 
-list:
-	@sh -c "$(MAKE) -p .FORCE | awk -F':' '/^[a-zA-Z0-9][^\$$#\/\\t=]*:([^=]|$$)/ {split(\$$1,A,/ /);for(i in A)print A[i]}' | grep -v '__\$$' | sort"
-
 test:
 	vendor/bin/phpunit
 
