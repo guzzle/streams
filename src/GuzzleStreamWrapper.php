@@ -28,7 +28,15 @@ class GuzzleStreamWrapper
         $hash = spl_object_hash($stream);
         self::$streams[$hash] = $stream;
 
-        return fopen('guzzle://' . $hash, 'r+');
+        if ($stream->isReadable()) {
+            $mode = $stream->isWritable() ? 'r+' : 'r';
+        } elseif ($stream->isWritable()) {
+            $mode = 'w';
+        } else {
+            throw new \RuntimeException('The stream must be readable, writable, or both.');
+        }
+
+        return fopen('guzzle://' . $hash, $mode);
     }
 
     public function stream_open($path, $mode, $options, &$opened_path)
