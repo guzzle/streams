@@ -22,35 +22,13 @@ class GuzzleStreamWrapper
      */
     public static function getResource(StreamInterface $stream)
     {
-        return fopen('guzzle://' . static::registerStream($stream), 'r+');
-    }
-
-    /**
-     * Registers a stream to be used as a PHP stream wrapper.
-     *
-     * @param StreamInterface $stream A stream
-     *
-     * @return string                 The hash of the stream
-     */
-    public static function registerStream(StreamInterface $stream)
-    {
         if (!in_array('guzzle', stream_get_wrappers())) {
             stream_wrapper_register('guzzle', get_called_class());
         }
         $hash = spl_object_hash($stream);
         self::$streams[$hash] = $stream;
 
-        return $hash;
-    }
-
-    /**
-     * Unregisters a stream.
-     *
-     * @param StreamInterface $stream A stream
-     */
-    public static function unregisterStream(StreamInterface $stream)
-    {
-        unset(self::$streams[spl_object_hash($stream)]);
+        return fopen('guzzle://' . $hash, 'r+');
     }
 
     public function stream_open($path, $mode, $options, &$opened_path)
@@ -77,7 +55,7 @@ class GuzzleStreamWrapper
 
     public function stream_close()
     {
-        static::unregisterStream($this->stream);
+        unset(self::$streams[spl_object_hash($this->stream)]);
     }
 
     public function stream_tell()
