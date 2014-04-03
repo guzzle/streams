@@ -3,15 +3,18 @@
 namespace GuzzleHttp\Stream;
 
 /**
- * PHP stream wrapper implementation.
+ * Converts Guzzle streams into PHP stream resources.
  */
 class GuzzleStreamWrapper
 {
     /** @var StreamInterface[] */
-    private static $streams = array();
+    private static $streams = [];
 
     /** @var StreamInterface */
-    protected $stream;
+    private $stream;
+
+    /** @var string r, r+, or w */
+    private $mode;
 
     /**
      * Returns a resource representing the stream.
@@ -19,36 +22,41 @@ class GuzzleStreamWrapper
      * @param StreamInterface $stream The stream to get a resource for
      *
      * @return resource
+     * @throws \InvalidArgumentException if stream is not readable or writable
      */
     public static function getResource(StreamInterface $stream)
     {
         if (!in_array('guzzle', stream_get_wrappers())) {
-            stream_wrapper_register('guzzle', get_called_class());
+            stream_wrapper_register('guzzle', __CLASS__);
         }
-        $hash = spl_object_hash($stream);
-        self::$streams[$hash] = $stream;
 
         if ($stream->isReadable()) {
             $mode = $stream->isWritable() ? 'r+' : 'r';
         } elseif ($stream->isWritable()) {
             $mode = 'w';
         } else {
-            throw new \RuntimeException('The stream must be readable, writable, or both.');
+            throw new \InvalidArgumentException('The stream must be readable, '
+                . 'writable, or both.');
         }
+
+        $hash = spl_object_hash($stream);
+        self::$streams[$hash] = $stream;
 
         return fopen('guzzle://' . $hash, $mode);
     }
 
     public function stream_open($path, $mode, $options, &$opened_path)
     {
-        list(, $hash) = explode('://', $path);
+        $hash = explode('://', $path)[1];
 
-        if (isset(self::$streams[$hash])) {
-            $this->stream = self::$streams[$hash];
-            return true;
+        if (!isset(self::$streams[$hash])) {
+            return false;
         }
 
-        return false;
+        $this->mode = $mode;
+        $this->stream = self::$streams[$hash];
+
+        return true;
     }
 
     public function stream_read($count)
@@ -81,8 +89,28 @@ class GuzzleStreamWrapper
         return $this->stream->seek($offset, $whence);
     }
 
-    public function stream_metadata($path, $option, $var)
+    public function stream_stat()
     {
-        return false;
+        static $modeMap = [
+            'r'  => 33060,
+            'r+' => 33206,
+            'w'  => 33188
+        ];
+
+        return [
+            'dev'     => 0,
+            'ino'     => 0,
+            'mode'    => $modeMap[$this->mode],
+            'nlink'   => 0,
+            'uid'     => 0,
+            'gid'     => 0,
+            'rdev'    => 0,
+            'size'    => $this->stream->getSize() ?: 0,
+            'atime'   => 0,
+            'mtime'   => 0,
+            'ctime'   => 0,
+            'blksize' => 0,
+            'blocks'  => 0
+        ];
     }
 }
