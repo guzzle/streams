@@ -113,7 +113,10 @@ class Stream implements MetadataStreamInterface
         }
 
         // If the stream is a file based stream and local, then use fstat
-        clearstatcache(true, $this->meta['uri']);
+        if (isset($this->meta['uri'])) {
+            clearstatcache(true, $this->meta['uri']);
+        }
+
         $stats = fstat($this->stream);
         if (isset($stats['size'])) {
             $this->size = $stats['size'];
