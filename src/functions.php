@@ -13,30 +13,27 @@ namespace GuzzleHttp\Stream;
  */
 function create($resource = '', $size = null)
 {
-    $type = gettype($resource);
-
-    if ($type == 'string') {
-        $stream = fopen('php://temp', 'r+');
-        if ($resource !== '') {
-            fwrite($stream, $resource);
-            fseek($stream, 0);
-        }
-        return new Stream($stream);
+    switch (gettype($resource)) {
+        case 'string':
+            $stream = fopen('php://temp', 'r+');
+            if ($resource !== '') {
+                fwrite($stream, $resource);
+                fseek($stream, 0);
+            }
+            return new Stream($stream);
+        case 'resource':
+            return new Stream($resource, $size);
+        case 'object':
+            if ($resource instanceof StreamInterface) {
+                return $resource;
+            } elseif (method_exists($resource, '__toString')) {
+                return create((string) $resource, $size);
+            } else {
+                throw new \InvalidArgumentException('Invalid object provided');
+            }
+        default:
+            return create((string) $resource, $size);
     }
-
-    if ($type == 'resource') {
-        return new Stream($resource, $size);
-    }
-
-    if ($resource instanceof StreamInterface) {
-        return $resource;
-    }
-
-    if ($type == 'object' && method_exists($resource, '__toString')) {
-        return create((string) $resource, $size);
-    }
-
-    throw new \InvalidArgumentException('Invalid resource type: ' . $type);
 }
 
 /**

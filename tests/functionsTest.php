@@ -109,6 +109,14 @@ class functionsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($s, Stream\create($s));
     }
 
+    public function testCreatesFromScalars()
+    {
+        $this->assertEquals('1', (string) Stream\create(true));
+        $this->assertEquals('', (string) Stream\create(false));
+        $this->assertEquals('', (string) Stream\create(null));
+        $this->assertEquals('10', (string) Stream\create(10));
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      */
