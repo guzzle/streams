@@ -132,8 +132,8 @@ function hash(
     }
 
     $ctx = hash_init($algo);
-    while ($data = $stream->read(1048576)) {
-        hash_update($ctx, $data);
+    while (!$stream->eof()) {
+        hash_update($ctx, $stream->read(1048576));
     }
 
     $out = hash_final($ctx, (bool) $rawOutput);
