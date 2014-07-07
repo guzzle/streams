@@ -198,4 +198,14 @@ class Stream implements MetadataStreamInterface
             ? $this->meta
             : (isset($this->meta[$key]) ? $this->meta[$key] : null);
     }
+
+    /**
+     * Get the stream resource
+     *
+     * @return  resource
+     */
+    public function getStream()
+    {
+        return $this->stream;
+    }
 }
