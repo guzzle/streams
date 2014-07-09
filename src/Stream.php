@@ -82,6 +82,10 @@ class Stream implements MetadataStreamInterface
 
     public function __toString()
     {
+        if (!$this->stream) {
+            return '';
+        }
+
         $this->seek(0);
 
         return (string) stream_get_contents($this->stream);
@@ -89,7 +93,9 @@ class Stream implements MetadataStreamInterface
 
     public function getContents($maxLength = -1)
     {
-        return stream_get_contents($this->stream, $maxLength);
+        return $this->stream
+            ? stream_get_contents($this->stream, $maxLength)
+            : '';
     }
 
     public function close()
@@ -97,19 +103,26 @@ class Stream implements MetadataStreamInterface
         if (is_resource($this->stream)) {
             fclose($this->stream);
         }
+
         $this->meta = [];
         $this->stream = null;
     }
 
     public function detach()
     {
-        $this->stream = null;
+        $result = $this->stream;
+        $this->stream = $this->size = null;
+        $this->readable = $this->writable = $this->seekable = false;
+
+        return $result;
     }
 
     public function getSize()
     {
         if ($this->size !== null) {
             return $this->size;
+        } elseif (!$this->stream) {
+            return null;
         }
 
         // If the stream is a file based stream and local, then use fstat
@@ -128,27 +141,27 @@ class Stream implements MetadataStreamInterface
 
     public function isReadable()
     {
-        return $this->stream && $this->readable;
+        return $this->readable;
     }
 
     public function isWritable()
     {
-        return $this->stream && $this->writable;
+        return $this->writable;
     }
 
     public function isSeekable()
     {
-        return $this->stream && $this->seekable;
+        return $this->seekable;
     }
 
     public function eof()
     {
-        return feof($this->stream);
+        return $this->stream && feof($this->stream);
     }
 
     public function tell()
     {
-        return ftell($this->stream);
+        return $this->stream ? ftell($this->stream) : false;
     }
 
     public function setSize($size)
@@ -167,7 +180,7 @@ class Stream implements MetadataStreamInterface
 
     public function read($length)
     {
-        return fread($this->stream, $length);
+        return $this->readable ? fread($this->stream, $length) : '';
     }
 
     public function write($string)
@@ -175,7 +188,7 @@ class Stream implements MetadataStreamInterface
         // We can't know the size after writing anything
         $this->size = null;
 
-        return fwrite($this->stream, $string);
+        return $this->writable ? fwrite($this->stream, $string) : false;
     }
 
     /**
