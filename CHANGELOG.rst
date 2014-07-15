@@ -2,6 +2,11 @@
 Changelog
 =========
 
+1.3.0 (2014-07-15)
+------------------
+
+* Added an AppendStream to stream over multiple stream one after the other.
+
 1.2.0 (2014-07-15)
 ------------------
 
