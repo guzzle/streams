@@ -92,7 +92,7 @@ class AppendStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($a->isWritable());
         $this->assertTrue($a->isSeekable());
         $this->assertTrue($a->isReadable());
-        $this->assertSame(0, $a->write('foo'));
+        $this->assertFalse($a->write('foo'));
     }
 
     public function testDoesNotNeedStreams()

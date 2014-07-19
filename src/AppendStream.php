@@ -207,6 +207,6 @@ class AppendStream implements StreamInterface
 
     public function write($string)
     {
-        return 0;
+        return false;
     }
 }
