@@ -164,6 +164,18 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($stream->getSize());
     }
 
+    public function testToStringKeepPositionOfResource()
+    {
+        $handle = fopen('php://temp', 'r+');
+        fwrite($handle, 'data');
+        fseek($handle, 2);
+
+        $stream = new Stream($handle);
+
+        $this->assertSame('data', (string) $stream);
+        $this->assertSame(2, $stream->tell());
+    }
+
     public function testCreatesWithFactory()
     {
         $stream = Stream::factory('foo');

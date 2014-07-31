@@ -86,9 +86,12 @@ class Stream implements MetadataStreamInterface
             return '';
         }
 
+        $offset = $this->tell();
         $this->seek(0);
+        $string = (string) stream_get_contents($this->stream);
+        $this->seek($offset);
 
-        return (string) stream_get_contents($this->stream);
+        return $string;
     }
 
     public function getContents($maxLength = -1)
