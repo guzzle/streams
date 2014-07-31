@@ -105,7 +105,7 @@ class Stream implements MetadataStreamInterface
         }
 
         $this->meta = [];
-        $this->stream = null;
+        $this->detach();
     }
 
     public function detach()
