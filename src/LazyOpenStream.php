@@ -38,7 +38,7 @@ class LazyOpenStream implements StreamInterface, MetadataStreamInterface
     private function getStream()
     {
         if (!$this->stream) {
-            $this->stream = create(fopen($this->filename, $this->mode));
+            $this->stream = create(safe_open($this->filename, $this->mode));
         }
 
         return $this->stream;

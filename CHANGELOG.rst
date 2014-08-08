@@ -2,6 +2,12 @@
 Changelog
 =========
 
+1.5.0 (2014-08-07)
+------------------
+
+* Added ``Stream\safe_open`` to open stream resources and throw exceptions
+  instead of raising errors.
+
 1.4.0 (2014-07-19)
 ------------------
 
