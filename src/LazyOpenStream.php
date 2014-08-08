@@ -59,9 +59,10 @@ class LazyOpenStream implements StreamInterface, MetadataStreamInterface
     public function detach()
     {
         $stream = $this->getStream();
-        $this->stream = null;
+        $result = $stream->detach();
+        $this->close();
 
-        return $stream->detach();
+        return $result;
     }
 
     public function tell()
