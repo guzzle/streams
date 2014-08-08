@@ -22,14 +22,10 @@ class AppendStreamTest extends \PHPUnit_Framework_TestCase
         $a->addStream($s);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage only supports SEEK_SET
-     */
     public function testValidatesSeekType()
     {
         $a = new AppendStream();
-        $a->seek(100, SEEK_CUR);
+        $this->assertFalse($a->seek(100, SEEK_CUR));
     }
 
     public function testTriesToRewindOnSeek()
