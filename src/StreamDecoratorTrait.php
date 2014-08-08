@@ -66,9 +66,7 @@ trait StreamDecoratorTrait
 
     public function detach()
     {
-        $result = $this->stream->detach();
-
-        return $result;
+        return $this->stream->detach();
     }
 
     public function getSize()
