@@ -2,6 +2,16 @@
 Changelog
 =========
 
+1.5.1 (2014-09-10)
+------------------
+
+* Stream metadata is grabbed from the underlying stream each time
+  ``getMetadata`` is called rather than returning a value from a cache.
+* Properly closing all underlying streams when AppendStream is closed.
+* Seek functions no longer throw exceptions.
+* LazyOpenStream now correctly returns the underlying stream resource when
+  detached.
+
 1.5.0 (2014-08-07)
 ------------------
 
