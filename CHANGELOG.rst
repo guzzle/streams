@@ -2,6 +2,13 @@
 Changelog
 =========
 
+2.0.0 (2014-08-16)
+------------------
+
+* Removed functions.php and moved all of those methods to
+  ``GuzzleHttp\Streams\Utils``.
+* Added ``flush()`` to ``StreamInterface``.
+
 1.5.1 (2014-09-10)
 ------------------
 
