@@ -204,4 +204,9 @@ class AppendStream implements StreamInterface
     {
         return false;
     }
+
+    public function flush()
+    {
+        return false;
+    }
 }

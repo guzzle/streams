@@ -186,6 +186,11 @@ class Stream implements MetadataStreamInterface
         return $this->writable ? fwrite($this->stream, $string) : false;
     }
 
+    public function flush()
+    {
+        return $this->stream ? fflush($this->stream) : false;
+    }
+
     /**
      * Get stream metadata as an associative array or retrieve a specific key.
      *

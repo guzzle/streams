@@ -126,6 +126,11 @@ trait StreamDecoratorTrait
         return $this->stream->write($string);
     }
 
+    public function flush()
+    {
+        return $this->stream->flush();
+    }
+
     /**
      * Implement in subclasses to dynamically create streams when requested.
      *

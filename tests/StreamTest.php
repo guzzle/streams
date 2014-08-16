@@ -171,4 +171,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $stream->getContents());
         $stream->close();
     }
+
+    public function testFlushes()
+    {
+        $stream = Stream::factory('foo');
+        $this->assertTrue($stream->flush());
+        $stream->close();
+    }
 }
