@@ -171,4 +171,19 @@ class Utils
 
         return $buffer;
     }
+
+    /**
+     * Shortcut to GuzzleHttp\Stream\Stream::factory.
+     *
+     * @param mixed $resource Resource to create
+     * @param int   $size     Size if known up front
+     *
+     * @return MetadataStreamInterface
+     *
+     * @see GuzzleHttp\Stream\Stream::factory
+     */
+    public static function create($resource, $size = null)
+    {
+        return Stream::factory($resource, $size);
+    }
 }

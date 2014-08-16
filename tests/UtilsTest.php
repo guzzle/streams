@@ -96,4 +96,9 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     {
         Utils::open('/path/to/does/not/exist', 'r');
     }
+
+    public function testProxiesToFactory()
+    {
+        $this->assertEquals('foo', (string) Utils::create('foo'));
+    }
 }
