@@ -32,6 +32,6 @@ class LazyOpenStream implements StreamInterface, MetadataStreamInterface
      */
     protected function createStream()
     {
-        return create(safe_open($this->filename, $this->mode));
+        return Stream::factory(Utils::open($this->filename, $this->mode));
     }
 }

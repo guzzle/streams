@@ -45,7 +45,7 @@ trait StreamDecoratorTrait
 
     public function getContents($maxLength = -1)
     {
-        return copy_to_string($this, $maxLength);
+        return Utils::copyToString($this, $maxLength);
     }
 
     /**

@@ -1,45 +1,45 @@
 <?php
 namespace GuzzleHttp\Stream;
 
-if (!defined('GUZZLE_STREAMS_FUNCTIONS')) {
-
-    define('GUZZLE_STREAMS_FUNCTIONS', true);
-
+/**
+ * Static utility class because PHP's autoloaders don't support the concept
+ * of namespaced function autoloading.
+ */
+class Utils
+{
     /**
-     * Create a new stream based on the input type
+     * Safely opens a PHP stream resource using a filename.
      *
-     * @param resource|string|StreamInterface $resource Entity body data
-     * @param int $size Size of the data contained in the resource
+     * When fopen fails, PHP normally raises a warning. This function adds an
+     * error handler that checks for errors and throws an exception instead.
      *
-     * @return StreamInterface
-     * @throws \InvalidArgumentException if the $resource arg is not valid.
+     * @param string $filename File to open
+     * @param string $mode     Mode used to open the file
+     *
+     * @return resource
+     * @throws \RuntimeException if the file cannot be opened
      */
-    function create($resource = '', $size = null)
+    public static function open($filename, $mode)
     {
-        $type = gettype($resource);
+        $ex = null;
+        set_error_handler(function () use ($filename, $mode, &$ex) {
+            $ex = new \RuntimeException(sprintf(
+                'Unable to open %s using mode %s: %s',
+                $filename,
+                $mode,
+                func_get_args()[1]
+            ));
+        });
 
-        if ($type == 'string') {
-            $stream = fopen('php://temp', 'r+');
-            if ($resource !== '') {
-                fwrite($stream, $resource);
-                fseek($stream, 0);
-            }
-            return new Stream($stream);
+        $handle = fopen($filename, $mode);
+        restore_error_handler();
+
+        if ($ex) {
+            /** @var $ex \RuntimeException */
+            throw $ex;
         }
 
-        if ($type == 'resource') {
-            return new Stream($resource, $size);
-        }
-
-        if ($resource instanceof StreamInterface) {
-            return $resource;
-        }
-
-        if ($type == 'object' && method_exists($resource, '__toString')) {
-            return create((string) $resource, $size);
-        }
-
-        throw new \InvalidArgumentException('Invalid resource type: ' . $type);
+        return $handle;
     }
 
     /**
@@ -51,7 +51,7 @@ if (!defined('GUZZLE_STREAMS_FUNCTIONS')) {
      *                                to read the entire stream.
      * @return string
      */
-    function copy_to_string(StreamInterface $stream, $maxLen = -1)
+    public static function copyToString(StreamInterface $stream, $maxLen = -1)
     {
         $buffer = '';
 
@@ -87,7 +87,7 @@ if (!defined('GUZZLE_STREAMS_FUNCTIONS')) {
      * @param int             $maxLen Maximum number of bytes to read. Pass -1
      *                                to read the entire stream.
      */
-    function copy_to_stream(
+    public static function copyToStream(
         StreamInterface $source,
         StreamInterface $dest,
         $maxLen = -1
@@ -124,7 +124,7 @@ if (!defined('GUZZLE_STREAMS_FUNCTIONS')) {
      *
      * @return bool|string Returns false on failure or a hash string on success
      */
-    function hash(
+    public static function hash(
         StreamInterface $stream,
         $algo,
         $rawOutput = false
@@ -153,7 +153,7 @@ if (!defined('GUZZLE_STREAMS_FUNCTIONS')) {
      *
      * @return string|bool
      */
-    function read_line(StreamInterface $stream, $maxLength = null)
+    public static function readline(StreamInterface $stream, $maxLength = null)
     {
         $buffer = '';
         $size = 0;
@@ -170,40 +170,5 @@ if (!defined('GUZZLE_STREAMS_FUNCTIONS')) {
         }
 
         return $buffer;
-    }
-
-    /**
-     * Safely opens a PHP stream resource using a filename.
-     *
-     * When fopen fails, PHP normally raises a warning. This function adds an
-     * error handler that checks for errors and throws an exception instead.
-     *
-     * @param string $filename File to open
-     * @param string $mode     Mode used to open the file
-     *
-     * @return resource
-     * @throws \RuntimeException if the file cannot be opened
-     */
-    function safe_open($filename, $mode)
-    {
-        $ex = null;
-        set_error_handler(function () use ($filename, $mode, &$ex) {
-            $ex = new \RuntimeException(sprintf(
-                'Unable to open %s using mode %s: %s',
-                $filename,
-                $mode,
-                func_get_args()[1]
-            ));
-        });
-
-        $handle = fopen($filename, $mode);
-        restore_error_handler();
-
-        if ($ex) {
-            /** @var $ex \RuntimeException */
-            throw $ex;
-        }
-
-        return $handle;
     }
 }

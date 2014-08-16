@@ -41,7 +41,30 @@ class Stream implements MetadataStreamInterface
      */
     public static function factory($resource = '', $size = null)
     {
-        return create($resource, $size);
+        $type = gettype($resource);
+
+        if ($type == 'string') {
+            $stream = fopen('php://temp', 'r+');
+            if ($resource !== '') {
+                fwrite($stream, $resource);
+                fseek($stream, 0);
+            }
+            return new self($stream);
+        }
+
+        if ($type == 'resource') {
+            return new self($resource, $size);
+        }
+
+        if ($resource instanceof StreamInterface) {
+            return $resource;
+        }
+
+        if ($type == 'object' && method_exists($resource, '__toString')) {
+            return self::factory((string) $resource, $size);
+        }
+
+        throw new \InvalidArgumentException('Invalid resource type: ' . $type);
     }
 
     /**
