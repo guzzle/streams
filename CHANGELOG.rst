@@ -6,8 +6,10 @@ Changelog
 ------------------
 
 * Removed functions.php and moved all of those methods to
-  ``GuzzleHttp\Streams\Utils``.
-* Added ``flush()`` to ``StreamInterface``.
+  ``GuzzleHttp\Streams\Utils``. Use ``GuzzleHttp\Stream\Stream::factory()``
+  instead of ``GuzzleHttp\Stream\create()`` to create new streams.
+* Added ``flush()`` to ``StreamInterface``. This method is used to flush any
+  underlying stream write buffers.
 
 1.5.1 (2014-09-10)
 ------------------
