@@ -5,7 +5,7 @@ Changelog
 2.0.0 (2014-08-16)
 ------------------
 
-* Removed functions.php and moved all of those methods to
+* Deprecated functions.php and moved all of those methods to
   ``GuzzleHttp\Streams\Utils``. Use ``GuzzleHttp\Stream\Stream::factory()``
   instead of ``GuzzleHttp\Stream\create()`` to create new streams.
 * Added ``flush()`` to ``StreamInterface``. This method is used to flush any
