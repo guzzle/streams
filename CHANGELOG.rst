@@ -2,6 +2,13 @@
 Changelog
 =========
 
+2.1.0 (2014-08-17)
+------------------
+
+* Added an InflateStream to inflate gzipped or deflated content.
+* Added ``flush`` to stream wrapper.
+* Added the ability to easily register the GuzzleStreamWrapper if needed.
+
 2.0.0 (2014-08-16)
 ------------------
 
