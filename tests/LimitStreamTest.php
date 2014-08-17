@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Tests\Http;
 
 use GuzzleHttp\Stream\Stream;
