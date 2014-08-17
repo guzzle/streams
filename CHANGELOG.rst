@@ -10,6 +10,8 @@ Changelog
   instead of ``GuzzleHttp\Stream\create()`` to create new streams.
 * Added ``flush()`` to ``StreamInterface``. This method is used to flush any
   underlying stream write buffers.
+* Added ``FnStream`` to easily decorate stream behavior with callables.
+* ``Utils::hash`` now throws an exception when the stream cannot seek to 0.
 
 1.5.1 (2014-09-10)
 ------------------

@@ -1,12 +1,14 @@
 <?php
 namespace GuzzleHttp\Tests\Stream;
 
+use GuzzleHttp\Stream\FnStream;
+use GuzzleHttp\Stream\NoSeekStream;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Stream\Utils;
 
 class UtilsTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCopiesToMemory()
+    public function testCopiesToString()
     {
         $s = Stream::factory('foobaz');
         $this->assertEquals('foobaz', Utils::copyToString($s));
@@ -14,6 +16,22 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', Utils::copyToString($s, 3));
         $this->assertEquals('baz', Utils::copyToString($s, 3));
         $this->assertEquals('', Utils::copyToString($s));
+    }
+
+    public function testCopiesToStringStopsWhenReadFails()
+    {
+        $s1 = Stream::factory('foobaz');
+        $s1 = FnStream::decorate($s1, ['read' => function () { return ''; }]);
+        $result = Utils::copyToString($s1);
+        $this->assertEquals('', $result);
+    }
+
+    public function testCopiesToStringStopsWhenReadFailsWithMaxLen()
+    {
+        $s1 = Stream::factory('foobaz');
+        $s1 = FnStream::decorate($s1, ['read' => function () { return ''; }]);
+        $result = Utils::copyToString($s1, 10);
+        $this->assertEquals('', $result);
     }
 
     public function testCopiesToStream()
@@ -28,6 +46,33 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', (string) $s2);
         Utils::copyToStream($s1, $s2, 3);
         $this->assertEquals('foobaz', (string) $s2);
+    }
+
+    public function testStopsCopyToStreamWhenWriteFails()
+    {
+        $s1 = Stream::factory('foobaz');
+        $s2 = Stream::factory('');
+        $s2 = FnStream::decorate($s2, ['write' => function () { return 0; }]);
+        Utils::copyToStream($s1, $s2);
+        $this->assertEquals('', (string) $s2);
+    }
+
+    public function testStopsCopyToSteamWhenWriteFailsWithMaxLen()
+    {
+        $s1 = Stream::factory('foobaz');
+        $s2 = Stream::factory('');
+        $s2 = FnStream::decorate($s2, ['write' => function () { return 0; }]);
+        Utils::copyToStream($s1, $s2, 10);
+        $this->assertEquals('', (string) $s2);
+    }
+
+    public function testStopsCopyToSteamWhenReadFailsWithMaxLen()
+    {
+        $s1 = Stream::factory('foobaz');
+        $s1 = FnStream::decorate($s1, ['read' => function () { return ''; }]);
+        $s2 = Stream::factory('');
+        Utils::copyToStream($s1, $s2, 10);
+        $this->assertEquals('', (string) $s2);
     }
 
     public function testReadsLines()
@@ -71,6 +116,16 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     {
         $s = Stream::factory('foobazbar');
         $this->assertEquals(md5('foobazbar'), Utils::hash($s, 'md5'));
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Stream\Exception\SeekException
+     */
+    public function testCalculatesHashThrowsWhenSeekFails()
+    {
+        $s = new NoSeekStream(Stream::factory('foobazbar'));
+        $s->read(2);
+        Utils::hash($s, 'md5');
     }
 
     public function testCalculatesHashSeeksToOriginalPosition()

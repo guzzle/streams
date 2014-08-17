@@ -1,5 +1,6 @@
 <?php
 namespace GuzzleHttp\Stream;
+use GuzzleHttp\Stream\Exception\SeekException;
 
 /**
  * Decorator used to return only a subset of a stream
@@ -95,22 +96,24 @@ class LimitStream implements StreamInterface, MetadataStreamInterface
      * @param int $offset Offset to seek to and begin byte limiting from
      *
      * @return self
-     * @throws \RuntimeException
+     * @throws SeekException
      */
     public function setOffset($offset)
     {
-        $this->offset = $offset;
         $current = $this->stream->tell();
+
         if ($current !== $offset) {
             // If the stream cannot seek to the offset position, then read to it
             if (!$this->stream->seek($offset)) {
                 if ($current > $offset) {
-                    throw new \RuntimeException("Cannot seek to stream offset {$offset}");
+                    throw new SeekException($this, $offset);
                 } else {
                     $this->stream->read($offset - $current);
                 }
             }
         }
+
+        $this->offset = $offset;
 
         return $this;
     }

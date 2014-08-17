@@ -1,6 +1,8 @@
 <?php
 namespace GuzzleHttp\Stream;
 
+use GuzzleHttp\Stream\Exception\SeekException;
+
 /**
  * Static utility class because PHP's autoloaders don't support the concept
  * of namespaced function autoloading.
@@ -63,16 +65,17 @@ class Utils
                 }
                 $buffer .= $buf;
             }
-        } else {
-            $len = 0;
-            while (!$stream->eof() && $len < $maxLen) {
-                $buf = $stream->read($maxLen - $len);
-                if ($buf === '' || $buf === false) {
-                    break;
-                }
-                $buffer .= $buf;
-                $len = strlen($buffer);
+            return $buffer;
+        }
+
+        $len = 0;
+        while (!$stream->eof() && $len < $maxLen) {
+            $buf = $stream->read($maxLen - $len);
+            if ($buf === '' || $buf === false) {
+                break;
             }
+            $buffer .= $buf;
+            $len = strlen($buffer);
         }
 
         return $buffer;
@@ -122,7 +125,8 @@ class Utils
      * @param string          $algo      Hash algorithm (e.g. md5, crc32, etc)
      * @param bool            $rawOutput Whether or not to use raw output
      *
-     * @return bool|string Returns false on failure or a hash string on success
+     * @return string Returns the hash of the stream
+     * @throws SeekException
      */
     public static function hash(
         StreamInterface $stream,
@@ -130,8 +134,9 @@ class Utils
         $rawOutput = false
     ) {
         $pos = $stream->tell();
-        if (!$stream->seek(0)) {
-            return false;
+
+        if ($pos > 0 && !$stream->seek(0)) {
+            throw new SeekException($stream);
         }
 
         $ctx = hash_init($algo);
@@ -173,7 +178,7 @@ class Utils
     }
 
     /**
-     * Shortcut to GuzzleHttp\Stream\Stream::factory.
+     * Alias of GuzzleHttp\Stream\Stream::factory.
      *
      * @param mixed $resource Resource to create
      * @param int   $size     Size if known up front

@@ -153,4 +153,10 @@ class AppendStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($a->eof());
         $this->assertSame('', (string) $a);
     }
+
+    public function testFlushReturnsFalse()
+    {
+        $s = new AppendStream();
+        $this->assertFalse($s->flush());
+    }
 }

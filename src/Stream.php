@@ -35,7 +35,7 @@ class Stream implements MetadataStreamInterface
      * @param resource|string|StreamInterface $resource Entity body data
      * @param int                             $size     Size of the data contained in the resource
      *
-     * @return StreamInterface
+     * @return Stream
      * @throws \InvalidArgumentException if the $resource arg is not valid.
      */
     public static function factory($resource = '', $size = null)
