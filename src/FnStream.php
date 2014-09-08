@@ -7,7 +7,7 @@ namespace GuzzleHttp\Stream;
  * Allows for easy testing and extension of a provided stream without needing
  * to create a concrete class for a simple extension point.
  */
-class FnStream implements MetadataStreamInterface
+class FnStream implements StreamInterface
 {
     /** @var array */
     private $methods;

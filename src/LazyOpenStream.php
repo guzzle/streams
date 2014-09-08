@@ -5,7 +5,7 @@ namespace GuzzleHttp\Stream;
  * Lazily reads or writes to a file that is opened only after an IO operation
  * take place on the stream.
  */
-class LazyOpenStream implements StreamInterface, MetadataStreamInterface
+class LazyOpenStream implements StreamInterface
 {
     use StreamDecoratorTrait;
 

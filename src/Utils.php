@@ -183,7 +183,7 @@ class Utils
      * @param mixed $resource Resource to create
      * @param int   $size     Size if known up front
      *
-     * @return MetadataStreamInterface
+     * @return StreamInterface
      *
      * @see GuzzleHttp\Stream\Stream::factory
      */

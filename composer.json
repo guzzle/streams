@@ -18,12 +18,11 @@
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {
-        "psr-4": { "GuzzleHttp\\Stream\\": "src/" },
-        "files": ["src/functions.php"]
+        "psr-4": { "GuzzleHttp\\Stream\\": "src/" }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1-dev"
+            "dev-master": "3.0-dev"
         }
     }
 }

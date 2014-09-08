@@ -76,9 +76,7 @@ trait StreamDecoratorTrait
 
     public function getMetadata($key = null)
     {
-        return $this->stream instanceof MetadataStreamInterface
-            ? $this->stream->getMetadata($key)
-            : null;
+        return $this->stream->getMetadata($key);
     }
 
     public function detach()

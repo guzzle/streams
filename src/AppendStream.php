@@ -208,4 +208,9 @@ class AppendStream implements StreamInterface
     {
         return false;
     }
+
+    public function getMetadata($key = null)
+    {
+        return $key ? null : [];
+    }
 }

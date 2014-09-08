@@ -5,7 +5,7 @@ use GuzzleHttp\Stream\Exception\SeekException;
 /**
  * Decorator used to return only a subset of a stream
  */
-class LimitStream implements StreamInterface, MetadataStreamInterface
+class LimitStream implements StreamInterface
 {
     use StreamDecoratorTrait;
 

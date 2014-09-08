@@ -6,7 +6,7 @@ use GuzzleHttp\Stream\Exception\SeekException;
  * Stream decorator that can cache previously read bytes from a sequentially
  * read stream.
  */
-class CachingStream implements StreamInterface, MetadataStreamInterface
+class CachingStream implements StreamInterface
 {
     use StreamDecoratorTrait;
 

@@ -2,6 +2,14 @@
 Changelog
 =========
 
+3.0.0 (TBD)
+-----------
+
+* Removed functions.php. Use the ``GuzzleHttp\Stream\Utils`` class instead.
+* Removed ``GuzzleHttp\Stream\MetadataStreamInterface``. The ``getMetadata()``
+  function has now been added to ``GuzzleHttp\Stream\StreamInterface``.
+* Only calling ``fflush()`` on writable streams.
+
 2.1.0 (2014-08-17)
 ------------------
 

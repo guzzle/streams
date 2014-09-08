@@ -4,7 +4,7 @@ namespace GuzzleHttp\Stream;
 /**
  * PHP stream implementation
  */
-class Stream implements MetadataStreamInterface
+class Stream implements StreamInterface
 {
     private $stream;
     private $size;
@@ -210,7 +210,9 @@ class Stream implements MetadataStreamInterface
 
     public function flush()
     {
-        return $this->stream ? fflush($this->stream) : false;
+        return $this->stream && $this->writable
+            ? fflush($this->stream)
+            : false;
     }
 
     /**
