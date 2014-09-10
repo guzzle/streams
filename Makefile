@@ -11,7 +11,6 @@ test:
 
 coverage:
 	vendor/bin/phpunit --coverage-html=artifacts/coverage
-	open artifacts/coverage/index.html
 
 view-coverage:
 	open artifacts/coverage/index.html

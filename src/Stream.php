@@ -107,11 +107,9 @@ class Stream implements StreamInterface
         return (string) stream_get_contents($this->stream);
     }
 
-    public function getContents($maxLength = -1)
+    public function getContents()
     {
-        return $this->stream
-            ? stream_get_contents($this->stream, $maxLength)
-            : '';
+        return $this->stream ? stream_get_contents($this->stream) : '';
     }
 
     public function close()
@@ -130,6 +128,11 @@ class Stream implements StreamInterface
         $this->readable = $this->writable = $this->seekable = false;
 
         return $result;
+    }
+
+    public function isDetached()
+    {
+        return $this->stream === null;
     }
 
     public function getSize()
@@ -215,32 +218,9 @@ class Stream implements StreamInterface
             : false;
     }
 
-    /**
-     * Get stream metadata as an associative array or retrieve a specific key.
-     *
-     * The keys returned are identical to the keys returned from PHP's
-     * stream_get_meta_data() function.
-     *
-     * @param string $key Specific metadata to retrieve.
-     *
-     * @return array|mixed|null Returns an associative array if no key is
-     *                          no key is provided. Returns a specific key
-     *                          value if a key is provided and the value is
-     *                          found, or null if the key is not found.
-     * @see http://php.net/manual/en/function.stream-get-meta-data.php
-     */
     public function getMetadata($key = null)
     {
-        if (!$this->stream) {
-            return [];
-        }
-
-        if (!$key) {
-            return stream_get_meta_data($this->stream);
-        }
-
-        $meta = stream_get_meta_data($this->stream);
-
-        return isset($meta[$key]) ? $meta[$key] : null;
+        $meta = $this->stream ? stream_get_meta_data($this->stream) : [];
+        return $key ? (isset($meta[$key]) ? $meta[$key] : null) : $meta;
     }
 }

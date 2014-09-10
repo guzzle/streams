@@ -21,16 +21,12 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     public function testCopiesToStringStopsWhenReadFails()
     {
         $s1 = Stream::factory('foobaz');
-        $s1 = FnStream::decorate($s1, ['read' => function () { return ''; }]);
+        $s1 = FnStream::decorate($s1, [
+            'read' => function () {
+                return false;
+            }
+        ]);
         $result = Utils::copyToString($s1);
-        $this->assertEquals('', $result);
-    }
-
-    public function testCopiesToStringStopsWhenReadFailsWithMaxLen()
-    {
-        $s1 = Stream::factory('foobaz');
-        $s1 = FnStream::decorate($s1, ['read' => function () { return ''; }]);
-        $result = Utils::copyToString($s1, 10);
         $this->assertEquals('', $result);
     }
 

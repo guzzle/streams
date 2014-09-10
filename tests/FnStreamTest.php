@@ -52,6 +52,7 @@ class FnStreamTest extends \PHPUnit_Framework_TestCase
     {
         $a = Stream::factory('foo');
         $b = FnStream::decorate($a, []);
+        $this->assertFalse($b->isDetached());
         $this->assertEquals(3, $b->getSize());
         $this->assertEquals($b->isWritable(), true);
         $this->assertEquals($b->isReadable(), true);

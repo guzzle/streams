@@ -85,8 +85,7 @@ class StreamDecoratorTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->b->getContents());
         $this->assertEquals('', $this->b->getContents());
         $this->b->seek(1);
-        $this->assertEquals('o', $this->b->getContents(1));
-        $this->assertEquals('', $this->b->getContents(0));
+        $this->assertEquals('oo', $this->b->getContents(1));
     }
 
     public function testCloses()
@@ -97,8 +96,10 @@ class StreamDecoratorTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testDetaches()
     {
+        $this->assertFalse($this->b->isDetached());
         $this->b->detach();
         $this->assertFalse($this->b->isReadable());
+        $this->assertTrue($this->b->isDetached());
     }
 
     public function testWrapsMetadata()

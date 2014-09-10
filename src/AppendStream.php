@@ -14,6 +14,7 @@ class AppendStream implements StreamInterface
     private $seekable = true;
     private $current = 0;
     private $pos = 0;
+    private $detached = false;
 
     /**
      * @param StreamInterface[] $streams Streams to decorate. Each stream must
@@ -57,9 +58,9 @@ class AppendStream implements StreamInterface
         $this->streams[] = $stream;
     }
 
-    public function getContents($maxLength = -1)
+    public function getContents()
     {
-        return Utils::copyToString($this, $maxLength);
+        return Utils::copyToString($this);
     }
 
     /**
@@ -86,6 +87,12 @@ class AppendStream implements StreamInterface
     public function detach()
     {
         $this->close();
+        $this->detached = true;
+    }
+
+    public function isDetached()
+    {
+        return $this->detached;
     }
 
     public function tell()

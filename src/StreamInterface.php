@@ -36,6 +36,15 @@ interface StreamInterface
     public function detach();
 
     /**
+     * Returns whether or not the stream is detached.
+     *
+     * Detached streams are no longer usable and have likely been closed.
+     *
+     * @return bool
+     */
+    public function isDetached();
+
+    /**
      * Get the size of the stream if known
      *
      * @return int|null Returns the size in bytes if known, or null if unknown
@@ -122,13 +131,13 @@ interface StreamInterface
     public function read($length);
 
     /**
-     * Returns the remaining contents in a string, up to maxlength bytes.
+     * Returns the remaining contents of the stream as a string.
      *
-     * @param int $maxLength The maximum bytes to read. Defaults to -1 (read
-     *                       all the remaining buffer).
+     * Note: this could potentially load a large amount of data into memory.
+     *
      * @return string
      */
-    public function getContents($maxLength = -1);
+    public function getContents();
 
     /**
      * Get stream metadata as an associative array or retrieve a specific key.

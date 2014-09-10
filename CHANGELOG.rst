@@ -9,7 +9,25 @@ Changelog
 * Move ``GuzzleHttp\Stream\MetadataStreamInterface::getMetadata`` to
   ``GuzzleHttp\Stream\StreamInterface``. MetadataStreamInterface is no longer
   used and is marked as deprecated.
+* Added ``isDetached()`` to ``GuzzleHttp\Stream\StreamInterface``.
+* Removed the ``$maxLength`` parameter from
+  ``GuzzleHttp\Stream\StreamInterface::getContents()``. This function now
+  returns the entire remainder of the stream. If you want to limit the maximum
+  amount of data read from the stream, use the
+  ``GuzzleHttp\Stream\Utils::copyToString()`` function.
 * Only calling ``fflush()`` on writable streams.
+* Added ``GuzzleHttp\Stream\BufferStream`` to add support for buffering data,
+  and when read, shifting data off of the buffer.
+* Added ``GuzzleHttp\Stream\NullBuffer`` which can be used as a buffer that
+  does not actually store any data.
+* Streams that return an empty string, ``''``, are no longer considered a
+  failure. You MUST return ``false`` to mark the read as a failure, and ensure
+  that any decorators you create properly return ``true`` in response to the
+  ``eof()`` method when the stream is consumed.
+* Added ``GuzzleHttp\Stream\AsyncStream`` to provide support for non-blocking
+  streams that can be filled by a remote source (e.g., an event-loop). If a
+  ``drain`` option is provided, the stream can also act as if it is a blocking
+  stream.
 
 2.1.0 (2014-08-17)
 ------------------

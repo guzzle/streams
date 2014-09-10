@@ -58,9 +58,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $stream->seek(0);
         $this->assertEquals('data', $stream->getContents());
         $this->assertEquals('', $stream->getContents());
-        $stream->seek(0);
-        $this->assertEquals('da', $stream->getContents(2));
-        $stream->close();
     }
 
     public function testChecksEof()
@@ -133,9 +130,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     {
         $r = fopen('php://temp', 'w+');
         $stream = new Stream($r);
+        $this->assertFalse($stream->isDetached());
         $this->assertTrue($stream->isReadable());
         $this->assertSame($r, $stream->detach());
         $this->assertNull($stream->detach());
+        $this->assertTrue($stream->isDetached());
         $this->assertFalse($stream->isReadable());
         $this->assertSame('', $stream->read(10));
         $this->assertFalse($stream->isWritable());

@@ -42,9 +42,9 @@ trait StreamDecoratorTrait
         }
     }
 
-    public function getContents($maxLength = -1)
+    public function getContents()
     {
-        return Utils::copyToString($this, $maxLength);
+        return Utils::copyToString($this);
     }
 
     /**
@@ -82,6 +82,11 @@ trait StreamDecoratorTrait
     public function detach()
     {
         return $this->stream->detach();
+    }
+
+    public function isDetached()
+    {
+        return $this->stream->isDetached();
     }
 
     public function getSize()

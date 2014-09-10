@@ -13,9 +13,9 @@ class FnStream implements StreamInterface
     private $methods;
 
     /** @var array Methods that must be implemented in the given array */
-    private static $slots = ['__toString', 'close', 'detach', 'getSize',
-        'tell', 'eof', 'isSeekable', 'seek', 'isWritable', 'write', 'flush',
-        'isReadable', 'read', 'getContents', 'getMetadata'];
+    private static $slots = ['__toString', 'close', 'detach', 'isDetached',
+        'getSize', 'tell', 'eof', 'isSeekable', 'seek', 'isWritable', 'write',
+        'flush', 'isReadable', 'read', 'getContents', 'getMetadata'];
 
     /**
      * @param array $methods Hash of method name to a callable.
@@ -85,6 +85,11 @@ class FnStream implements StreamInterface
         return call_user_func($this->_fn_detach);
     }
 
+    public function isDetached()
+    {
+        return call_user_func($this->_fn_isDetached);
+    }
+
     public function getSize()
     {
         return call_user_func($this->_fn_getSize);
@@ -135,9 +140,9 @@ class FnStream implements StreamInterface
         return call_user_func($this->_fn_read, $length);
     }
 
-    public function getContents($maxLength = -1)
+    public function getContents()
     {
-        return call_user_func($this->_fn_getContents, $maxLength);
+        return call_user_func($this->_fn_getContents);
     }
 
     public function getMetadata($key = null)
