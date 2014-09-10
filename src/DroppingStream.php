@@ -23,18 +23,15 @@ class DroppingStream implements StreamInterface
 
     public function write($string)
     {
-        $currentSize = $this->stream->getSize();
-        $diff = $this->maxLength - $currentSize;
+        $diff = $this->maxLength - $this->stream->getSize();
 
         // Begin returning false when the underlying stream is too large.
         if ($diff <= 0) {
             return false;
         }
 
-        $len = strlen($string);
-
         // Write the stream or a subset of the stream if needed.
-        if ($len < $diff) {
+        if (strlen($string) < $diff) {
             return $this->stream->write($string);
         }
 
