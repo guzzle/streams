@@ -178,7 +178,7 @@ class AsyncReadStream implements StreamInterface
 
     public function read($length)
     {
-        if (!$this->needsDrain && $this->drain && $this->hwm) {
+        if (!$this->needsDrain && $this->drain) {
             $this->needsDrain = $this->stream->getSize() >= $this->hwm;
         }
 
