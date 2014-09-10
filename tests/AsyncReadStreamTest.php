@@ -32,13 +32,12 @@ class AsyncReadStreamTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Buffer does not provide an hwm metadata value
-     */
     public function testValidatesHwmMetadata()
     {
-        new AsyncReadStream(Stream::factory());
+        $a = new AsyncReadStream(Stream::factory(), [
+            'drain' => function() {}
+        ]);
+        $this->assertNull($this->readAttribute($a, 'drain'));
     }
 
     /**
@@ -116,11 +115,19 @@ class AsyncReadStreamTest extends \PHPUnit_Framework_TestCase
                 $called++;
             }
         ]);
+
         $buffer->write('foobar');
+        $this->assertEquals(6, $buffer->getSize());
         $this->assertEquals(0, $called);
+
         $a->read(3);
+        $this->assertTrue($this->readAttribute($a, 'needsDrain'));
+        $this->assertEquals(3, $buffer->getSize());
         $this->assertEquals(0, $called);
+
         $a->read(3);
+        $this->assertEquals(0, $buffer->getSize());
+        $this->assertFalse($this->readAttribute($a, 'needsDrain'));
         $this->assertEquals(1, $called);
     }
 
@@ -139,10 +146,10 @@ class AsyncReadStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GuzzleHttp\Stream\AsyncReadStream', $async);
     }
 
-    public function testCreatesBlackHoleStream()
+    public function testCreatesNullStream()
     {
         list($buffer, $async) = AsyncReadStream::create(['max_buffer' => 0]);
-        $this->assertInstanceOf('GuzzleHttp\Stream\NullBuffer', $buffer);
+        $this->assertInstanceOf('GuzzleHttp\Stream\NullStream', $buffer);
         $this->assertInstanceOf('GuzzleHttp\Stream\AsyncReadStream', $async);
     }
 

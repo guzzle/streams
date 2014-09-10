@@ -110,7 +110,7 @@ class BufferStream implements StreamInterface
 
         $currentLength = strlen($this->buffer);
 
-        if ($length > $currentLength) {
+        if ($length >= $currentLength) {
             // No need to slice the buffer because we don't have enough data.
             $result = $this->buffer;
             $this->buffer = '';

@@ -1,13 +1,13 @@
 <?php
 namespace GuzzleHttp\Tests\Stream;
 
-use GuzzleHttp\Stream\NullBuffer;
+use GuzzleHttp\Stream\NullStream;
 
-class NullBufferTest extends \PHPUnit_Framework_TestCase
+class NullStreamTest extends \PHPUnit_Framework_TestCase
 {
     public function testDoesNothing()
     {
-        $b = new NullBuffer();
+        $b = new NullStream();
         $this->assertEquals('', $b->read(10));
         $this->assertEquals(4, $b->write('test'));
         $this->assertEquals('', (string) $b);

@@ -4,7 +4,7 @@ namespace GuzzleHttp\Stream;
 /**
  * Does not store any data written to it.
  */
-class NullBuffer implements StreamInterface
+class NullStream implements StreamInterface
 {
     private $detached = false;
 
@@ -81,12 +81,6 @@ class NullBuffer implements StreamInterface
 
     public function getMetadata($key = null)
     {
-        if ($key == 'hwm') {
-            return 0;
-        } elseif ($key) {
-            return null;
-        } else {
-            return [];
-        }
+        return $key ? null : [];
     }
 }

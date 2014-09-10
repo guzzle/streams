@@ -4,27 +4,44 @@ namespace GuzzleHttp\Stream;
 /**
  * Represents an asynchronous read-only stream that supports a drain event and
  * pumping data from a source stream.
+ *
+ * The AsyncReadStream can be used as a completely asynchronous stream, meaning
+ * the data you can read from the stream will immediately return only
+ * the data that is currently buffered.
+ *
+ * AsyncReadStream can also be used in a "blocking" manner if a "pump" function
+ * is provided. When a caller requests more bytes than are available in the
+ * buffer, then the pump function is used to block until the requested number
+ * of bytes are available or the remote source stream has errored, closed, or
+ * timed-out. This behavior isn't strictly "blocking" because the pump function
+ * can send other transfers while waiting on the desired buffer size to be
+ * ready for reading (e.g., continue to tick an event loop).
  */
 class AsyncReadStream implements StreamInterface
 {
     use StreamDecoratorTrait;
 
-    /** @var callable|null */
+    /** @var callable|null Fn used to notify writers the buffer has drained */
     private $drain;
 
-    /** @var callable|null */
+    /** @var callable|null Fn used to block for more data */
     private $pump;
 
-    /** @var int|null */
+    /** @var int|null Highwater mark of the underlying buffer */
     private $hwm;
 
-    /** @var bool */
+    /** @var bool Whether or not drain needs to be called at some point */
     private $needsDrain;
 
-    /** @var int */
+    /** @var int The expected size of the remote source */
     private $size;
 
     /**
+     * In order to utilize high water marks to tell writers to slow down, the
+     * provided stream must answer to the "hwm" stream metadata variable,
+     * providing the high water mark. If no "hwm" metadata value is available,
+     * then the "drain" functionality is not utilized.
+     *
      * This class accepts an associative array of configuration options.
      *
      * - drain: (callable) Function to invoke when the stream has drained,
@@ -38,9 +55,6 @@ class AsyncReadStream implements StreamInterface
      *   source stream is closed.
      * - size: (int) The expected size in bytes of the data that will be read
      *   (if known up-front).
-     *
-     * The provided stream must answer to the "hwm" stream metadata variable,
-     * providing the high water mark.
      *
      * @param StreamInterface $buffer   Buffer that contains the data that has
      *                                  been read by the event loop.
@@ -59,11 +73,6 @@ class AsyncReadStream implements StreamInterface
             );
         }
 
-        if ($this->hwm = $buffer->getMetadata('hwm') === null) {
-            throw new \InvalidArgumentException('Buffer does not provide an '
-                . 'hwm metadata value');
-        }
-
         if (isset($config['size'])) {
             $this->size = $config['size'];
         }
@@ -78,6 +87,13 @@ class AsyncReadStream implements StreamInterface
                 }
                 $this->{$check} = $config[$check];
             }
+        }
+
+        $this->hwm = $buffer->getMetadata('hwm');
+
+        // Cannot drain when there's no high water mark.
+        if ($this->hwm === null) {
+            $this->drain = null;
         }
 
         $this->stream = $buffer;
@@ -97,7 +113,7 @@ class AsyncReadStream implements StreamInterface
      * - max_buffer: (int) If provided, wraps the utilized buffer in a
      *   DroppingStream decorator to ensure that buffer does not exceed a given
      *   length. When exceeded, the stream will begin dropping data. Set the
-     *   max_buffer to 0, to use a NullBuffer which does not store data.
+     *   max_buffer to 0, to use a NullStream which does not store data.
      * - on_write: (callable) A function that is invoked when data is written
      *   to the underlying buffer. The function accepts the buffer as the first
      *   argument, and the data being written as the second.
@@ -116,7 +132,7 @@ class AsyncReadStream implements StreamInterface
             : null;
 
         if ($maxBuffer === 0) {
-            $buffer = new NullBuffer();
+            $buffer = new NullStream();
         } else {
             $hwm = isset($options['hwm']) ? $options['hwm'] : 16384;
             $buffer = isset($options['buffer'])
@@ -160,25 +176,26 @@ class AsyncReadStream implements StreamInterface
 
     public function read($length)
     {
-        $result = $this->stream->read($length);
-        $currentLen = $this->stream->getSize();
-        $resultLen = strlen($result);
-
-        if ($this->drain) {
-            // If we need to drain, then drain when the buffer is empty.
-            if ($this->needsDrain && $currentLen === 0) {
-                $this->needsDrain = false;
-                call_user_func($this->drain, $this->stream);
-            } else {
-                // The buffer needs to drain when it hits the high water mark.
-                $this->needsDrain = $currentLen - $resultLen >= $this->hwm;
-            }
+        if (!$this->needsDrain && $this->drain && $this->hwm) {
+            $this->needsDrain = $this->stream->getSize() >= $this->hwm;
         }
+
+        $result = $this->stream->read($length);
+
+        // If we need to drain, then drain when the buffer is empty.
+        if ($this->needsDrain && $this->stream->getSize() === 0) {
+            $this->needsDrain = false;
+            $drainFn = $this->drain;
+            $drainFn($this->stream);
+        }
+
+        $resultLen = strlen($result);
 
         // If a pump was provided, the buffer is still open, and not enough
         // data was given, then block until the data is provided.
         if ($this->pump && $resultLen < $length && !$this->isDetached()) {
-            $result .= call_user_func($this->pump, $length - $resultLen);
+            $pumpFn = $this->pump;
+            $result .= $pumpFn($length - $resultLen);
         }
 
         return $result;
