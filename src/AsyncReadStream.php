@@ -116,7 +116,9 @@ class AsyncReadStream implements StreamInterface
      *   max_buffer to 0, to use a NullStream which does not store data.
      * - on_write: (callable) A function that is invoked when data is written
      *   to the underlying buffer. The function accepts the buffer as the first
-     *   argument, and the data being written as the second.
+     *   argument, and the data being written as the second. The function MUST
+     *   return the number of bytes that were written or false to let writers
+     *   know to slow down.
      * - drain: (callable) See constructor documentation.
      * - pump: (callable) See constructor documentation.
      *
