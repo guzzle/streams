@@ -101,7 +101,8 @@ interface StreamInterface
      * @param string $string The string that is to be written.
      *
      * @return int|bool Returns the number of bytes written to the stream on
-     *                  success or false on failure.
+     *                  success returns false on failure (e.g., broken pipe,
+     *                  writer needs to slow down, buffer is full, etc.)
      */
     public function write($string);
 
