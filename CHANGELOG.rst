@@ -28,6 +28,11 @@ Changelog
   streams that can be filled by a remote source (e.g., an event-loop). If a
   ``drain`` option is provided, the stream can also act as if it is a blocking
   stream.
+* ``GuzzleHttp\Stream\Stream::__construct``,
+  ``GuzzleHttp\Stream\Stream::factory``, and
+  ``GuzzleHttp\Stream\Utils::create`` no longer accept a size in the second
+  argument. They now accept an associative array of options, including the
+  "size" key and "metadata" key which can be used to provide custom metadata.
 
 2.1.0 (2014-08-17)
 ------------------

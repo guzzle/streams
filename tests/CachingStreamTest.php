@@ -89,8 +89,7 @@ class CachingStreamTest extends \PHPUnit_Framework_TestCase
         $decorated = Stream::factory(
             implode("\n", array_map(function ($n) {
                 return str_pad($n, 4, '0', STR_PAD_LEFT);
-            }, range(0, 25))),
-            true
+            }, range(0, 25)))
         );
 
         $body = new CachingStream($decorated);

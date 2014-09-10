@@ -181,14 +181,16 @@ class Utils
      * Alias of GuzzleHttp\Stream\Stream::factory.
      *
      * @param mixed $resource Resource to create
-     * @param int   $size     Size if known up front
+     * @param array $options  Associative array of stream options defined in
+     *                        {@see \GuzzleHttp\Stream\Stream::__construct}
      *
      * @return StreamInterface
      *
      * @see GuzzleHttp\Stream\Stream::factory
+     * @see GuzzleHttp\Stream\Stream::__construct
      */
-    public static function create($resource, $size = null)
+    public static function create($resource, array $options = [])
     {
-        return Stream::factory($resource, $size);
+        return Stream::factory($resource, $options);
     }
 }

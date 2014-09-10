@@ -212,6 +212,19 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     {
         Stream::factory(new \stdClass());
     }
+
+    public function testReturnsCustomMetadata()
+    {
+        $s = Stream::factory('foo', ['metadata' => ['hwm' => 3]]);
+        $this->assertEquals(3, $s->getMetadata('hwm'));
+        $this->assertArrayHasKey('hwm', $s->getMetadata());
+    }
+
+    public function testCanSetSize()
+    {
+        $s = Stream::factory('', ['size' => 10]);
+        $this->assertEquals(10, $s->getSize());
+    }
 }
 
 class HasToString
