@@ -133,11 +133,11 @@ class AsyncReadStream implements StreamInterface
 
         if ($maxBuffer === 0) {
             $buffer = new NullStream();
+        } elseif (isset($options['buffer'])) {
+            $buffer = $options['buffer'];
         } else {
             $hwm = isset($options['hwm']) ? $options['hwm'] : 16384;
-            $buffer = isset($options['buffer'])
-                ? $options['buffer']
-                : new BufferStream($hwm);
+            $buffer = new BufferStream($hwm);
         }
 
         if ($maxBuffer > 0) {
