@@ -167,8 +167,8 @@ class AsyncReadStreamTest extends \PHPUnit_Framework_TestCase
         $c = 0;
         $b = new BufferStream();
         list($buffer, $async) = AsyncReadStream::create([
-            'buffer'   => $b,
-            'on_write' => function (BufferStream $buf, $data) use (&$c, $b) {
+            'buffer' => $b,
+            'write'  => function (BufferStream $buf, $data) use (&$c, $b) {
                 $this->assertSame($buf, $b);
                 $this->assertEquals('foo', $data);
                 $c++;

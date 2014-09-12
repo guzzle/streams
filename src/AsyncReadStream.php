@@ -114,7 +114,7 @@ class AsyncReadStream implements StreamInterface
      *   DroppingStream decorator to ensure that buffer does not exceed a given
      *   length. When exceeded, the stream will begin dropping data. Set the
      *   max_buffer to 0, to use a NullStream which does not store data.
-     * - on_write: (callable) A function that is invoked when data is written
+     * - write: (callable) A function that is invoked when data is written
      *   to the underlying buffer. The function accepts the buffer as the first
      *   argument, and the data being written as the second. The function MUST
      *   return the number of bytes that were written or false to let writers
@@ -147,8 +147,8 @@ class AsyncReadStream implements StreamInterface
         }
 
         // Call the on_write callback if an on_write function was provided.
-        if (isset($options['on_write'])) {
-            $onWrite = $options['on_write'];
+        if (isset($options['write'])) {
+            $onWrite = $options['write'];
             $buffer = FnStream::decorate($buffer, [
                 'write' => function ($string) use ($buffer, $onWrite) {
                     $result = $buffer->write($string);
