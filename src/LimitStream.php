@@ -70,8 +70,10 @@ class LimitStream implements StreamInterface, MetadataStreamInterface
             return false;
         }
 
-        if ($offset < $this->offset) {
+        if ($offset < 0) {
             $offset = $this->offset;
+        } else {
+            $offset += $this->offset;
         }
 
         if ($this->limit !== -1 && $offset > ($this->offset + $this->limit)) {
