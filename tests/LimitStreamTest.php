@@ -56,11 +56,18 @@ class LimitStreamTest extends \PHPUnit_Framework_TestCase
 
     public function testAllowsBoundedSeek()
     {
-        $this->body->seek(100);
+        $this->assertEquals(true, $this->body->seek(100));
+        $this->assertEquals(10, $this->body->tell());
         $this->assertEquals(13, $this->decorated->tell());
-        $this->body->seek(0);
+        $this->assertEquals(true, $this->body->seek(0));
         $this->assertEquals(0, $this->body->tell());
         $this->assertEquals(3, $this->decorated->tell());
+        $this->assertEquals(true, $this->body->seek(-10));
+        $this->assertEquals(0, $this->body->tell());
+        $this->assertEquals(3, $this->decorated->tell());
+        $this->assertEquals(true, $this->body->seek(5));
+        $this->assertEquals(5, $this->body->tell());
+        $this->assertEquals(8, $this->decorated->tell());
         $this->assertEquals(false, $this->body->seek(1000, SEEK_END));
     }
 
