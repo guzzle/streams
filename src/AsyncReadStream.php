@@ -16,6 +16,8 @@ namespace GuzzleHttp\Stream;
  * timed-out. This behavior isn't strictly "blocking" because the pump function
  * can send other transfers while waiting on the desired buffer size to be
  * ready for reading (e.g., continue to tick an event loop).
+ *
+ * @unstable This class is subject to change.
  */
 class AsyncReadStream implements StreamInterface
 {
