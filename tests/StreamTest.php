@@ -136,13 +136,13 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($stream->detach());
         $this->assertTrue($stream->isDetached());
         $this->assertFalse($stream->isReadable());
-        $this->assertSame('', $stream->read(10));
+        $this->assertFalse($stream->read(10));
         $this->assertFalse($stream->isWritable());
         $this->assertFalse($stream->write('foo'));
         $this->assertFalse($stream->isSeekable());
         $this->assertFalse($stream->seek(10));
         $this->assertFalse($stream->tell());
-        $this->assertFalse($stream->eof());
+        $this->assertTrue($stream->eof());
         $this->assertNull($stream->getSize());
         $this->assertSame('', (string) $stream);
         $this->assertSame('', $stream->getContents());

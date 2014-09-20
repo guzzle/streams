@@ -195,7 +195,7 @@ class Stream implements StreamInterface
 
     public function eof()
     {
-        return $this->stream && feof($this->stream);
+        return !$this->stream || feof($this->stream);
     }
 
     public function tell()
@@ -219,7 +219,7 @@ class Stream implements StreamInterface
 
     public function read($length)
     {
-        return $this->readable ? fread($this->stream, $length) : '';
+        return $this->readable ? fread($this->stream, $length) : false;
     }
 
     public function write($string)
