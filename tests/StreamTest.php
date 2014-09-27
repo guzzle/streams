@@ -225,6 +225,22 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $s = Stream::factory('', ['size' => 10]);
         $this->assertEquals(10, $s->getSize());
     }
+
+    public function testCanCreateIteratorBasedStream()
+    {
+        $a = new \ArrayIterator(['foo', 'bar', '123']);
+        $p = Stream::factory($a);
+        $this->assertInstanceOf('GuzzleHttp\Stream\PumpStream', $p);
+        $this->assertEquals('foo', $p->read(3));
+        $this->assertFalse($p->eof());
+        $this->assertEquals('b', $p->read(1));
+        $this->assertEquals('a', $p->read(1));
+        $this->assertEquals('r12', $p->read(3));
+        $this->assertFalse($p->eof());
+        $this->assertEquals('3', $p->getContents());
+        $this->assertTrue($p->eof());
+        $this->assertEquals(9, $p->tell());
+    }
 }
 
 class HasToString

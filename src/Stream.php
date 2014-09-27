@@ -67,6 +67,21 @@ class Stream implements StreamInterface
             return self::factory((string) $resource, $options);
         }
 
+        if (is_callable($resource)) {
+            return new PumpStream($resource, $options);
+        }
+
+        if ($resource instanceof \Iterator) {
+            return new PumpStream(function () use ($resource) {
+                if (!$resource->valid()) {
+                    return false;
+                }
+                $result = $resource->current();
+                $resource->next();
+                return $result;
+            }, $options);
+        }
+
         throw new \InvalidArgumentException('Invalid resource type: ' . $type);
     }
 
