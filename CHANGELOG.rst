@@ -5,6 +5,8 @@ Changelog
 3.0.0 (TBD)
 -----------
 
+* Removed ``functions.php``. Use the corresponding functions provided by
+  ``GuzzleHttp\Streams\Utils`` instead.
 * Move ``GuzzleHttp\Stream\MetadataStreamInterface::getMetadata`` to
   ``GuzzleHttp\Stream\StreamInterface``. MetadataStreamInterface is no longer
   used and is marked as deprecated.
