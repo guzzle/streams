@@ -17,4 +17,9 @@ class NoSeekStream implements StreamInterface
     {
         return false;
     }
+
+    public function attach($stream)
+    {
+        $this->stream->attach($stream);
+    }
 }

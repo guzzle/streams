@@ -41,11 +41,9 @@ class BufferStreamTest extends \PHPUnit_Framework_TestCase
     public function testCanDetach()
     {
         $b = new BufferStream();
-        $this->assertFalse($b->isDetached());
         $b->write('foo');
         $b->detach();
         $this->assertEquals(0, $b->tell());
-        $this->assertTrue($b->isDetached());
         $this->assertTrue($b->eof());
         $this->assertFalse($b->write('abc'));
         $this->assertFalse($b->read(10));
@@ -58,5 +56,14 @@ class BufferStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($b->write('hello'));
         $this->assertEquals('hi hello', (string) $b);
         $this->assertEquals(4, $b->write('test'));
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Stream\Exception\CannotAttachException
+     */
+    public function testCannotAttach()
+    {
+        $p = new BufferStream();
+        $p->attach('a');
     }
 }

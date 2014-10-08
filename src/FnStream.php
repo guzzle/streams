@@ -13,7 +13,7 @@ class FnStream implements StreamInterface
     private $methods;
 
     /** @var array Methods that must be implemented in the given array */
-    private static $slots = ['__toString', 'close', 'detach', 'isDetached',
+    private static $slots = ['__toString', 'close', 'detach', 'attach',
         'getSize', 'tell', 'eof', 'isSeekable', 'seek', 'isWritable', 'write',
         'flush', 'isReadable', 'read', 'getContents', 'getMetadata'];
 
@@ -85,9 +85,9 @@ class FnStream implements StreamInterface
         return call_user_func($this->_fn_detach);
     }
 
-    public function isDetached()
+    public function attach($stream)
     {
-        return call_user_func($this->_fn_isDetached);
+        return call_user_func($this->_fn_attach, $stream);
     }
 
     public function getSize()

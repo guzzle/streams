@@ -36,13 +36,21 @@ interface StreamInterface
     public function detach();
 
     /**
-     * Returns whether or not the stream is detached.
+     * Replaces the underlying stream resource with the provided stream.
      *
-     * Detached streams are no longer usable and have likely been closed.
+     * Use this method to replace the underlying stream with another; as an
+     * example, in server-side code, if you decide to return a file, you
+     * would replace the original content-oriented stream with the file
+     * stream.
      *
-     * @return bool
+     * Any internal state such as caching of cursor position should be reset
+     * when attach() is called, as the stream has changed.
+     *
+     * @param resource $stream
+     *
+     * @return void
      */
-    public function isDetached();
+    public function attach($stream);
 
     /**
      * Get the size of the stream if known

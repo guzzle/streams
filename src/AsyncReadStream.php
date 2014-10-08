@@ -197,7 +197,7 @@ class AsyncReadStream implements StreamInterface
 
         // If a pump was provided, the buffer is still open, and not enough
         // data was given, then block until the data is provided.
-        if ($this->pump && $resultLen < $length && !$this->isDetached()) {
+        if ($this->pump && $resultLen < $length) {
             $pumpFn = $this->pump;
             $result .= $pumpFn($length - $resultLen);
         }

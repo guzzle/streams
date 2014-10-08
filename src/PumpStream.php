@@ -1,6 +1,8 @@
 <?php
 namespace GuzzleHttp\Stream;
 
+use GuzzleHttp\Stream\Exception\CannotAttachException;
+
 /**
  * Provides a read only stream that pumps data from a PHP callable.
  *
@@ -62,9 +64,9 @@ class PumpStream implements StreamInterface
         $this->source = null;
     }
 
-    public function isDetached()
+    public function attach($stream)
     {
-        return !$this->source;
+        throw new CannotAttachException();
     }
 
     public function getSize()

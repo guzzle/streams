@@ -105,8 +105,6 @@ class Stream implements StreamInterface
             throw new \InvalidArgumentException('Stream must be a resource');
         }
 
-        $this->stream = $stream;
-
         if (isset($options['size'])) {
             $this->size = $options['size'];
         }
@@ -115,11 +113,7 @@ class Stream implements StreamInterface
             ? $options['metadata']
             : [];
 
-        $meta = stream_get_meta_data($this->stream);
-        $this->seekable = $meta['seekable'];
-        $this->readable = isset(self::$readWriteHash['read'][$meta['mode']]);
-        $this->writable = isset(self::$readWriteHash['write'][$meta['mode']]);
-        $this->uri = $this->getMetadata('uri');
+        $this->attach($stream);
     }
 
     /**
@@ -164,9 +158,14 @@ class Stream implements StreamInterface
         return $result;
     }
 
-    public function isDetached()
+    public function attach($stream)
     {
-        return $this->stream === null;
+        $this->stream = $stream;
+        $meta = stream_get_meta_data($this->stream);
+        $this->seekable = $meta['seekable'];
+        $this->readable = isset(self::$readWriteHash['read'][$meta['mode']]);
+        $this->writable = isset(self::$readWriteHash['write'][$meta['mode']]);
+        $this->uri = $this->getMetadata('uri');
     }
 
     public function getSize()

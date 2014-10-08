@@ -1,6 +1,8 @@
 <?php
 namespace GuzzleHttp\Stream;
 
+use GuzzleHttp\Stream\Exception\CannotAttachException;
+
 /**
  * Provides a buffer stream that can be written to to fill a buffer, and read
  * from to remove bytes from the buffer.
@@ -59,9 +61,9 @@ class BufferStream implements StreamInterface
         $this->close();
     }
 
-    public function isDetached()
+    public function attach($stream)
     {
-        return $this->detached;
+        throw new CannotAttachException();
     }
 
     public function getSize()

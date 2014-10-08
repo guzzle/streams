@@ -54,7 +54,6 @@ class PumpStreamTest extends \PHPUnit_Framework_TestCase
     public function testDescribesCapabilities()
     {
         $p = Stream::factory(function () {});
-        $this->assertFalse($p->isDetached());
         $this->assertTrue($p->isReadable());
         $this->assertFalse($p->isSeekable());
         $this->assertFalse($p->isWritable());
@@ -64,8 +63,16 @@ class PumpStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $p->getContents());
         $this->assertEquals('', (string) $p);
         $p->close();
-        $this->assertTrue($p->isDetached());
         $this->assertEquals('', $p->read(10));
         $this->assertTrue($p->eof());
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Stream\Exception\CannotAttachException
+     */
+    public function testCannotAttach()
+    {
+        $p = Stream::factory(function () {});
+        $p->attach('a');
     }
 }

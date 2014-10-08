@@ -96,10 +96,16 @@ class StreamDecoratorTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testDetaches()
     {
-        $this->assertFalse($this->b->isDetached());
         $this->b->detach();
         $this->assertFalse($this->b->isReadable());
-        $this->assertTrue($this->b->isDetached());
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Stream\Exception\CannotAttachException
+     */
+    public function testCannotAttachByDefault()
+    {
+        $this->b->attach('a');
     }
 
     public function testWrapsMetadata()

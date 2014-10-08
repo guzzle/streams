@@ -1,13 +1,12 @@
 <?php
 namespace GuzzleHttp\Stream;
+use GuzzleHttp\Stream\Exception\CannotAttachException;
 
 /**
  * Does not store any data written to it.
  */
 class NullStream implements StreamInterface
 {
-    private $detached = false;
-
     public function __toString()
     {
         return '';
@@ -20,13 +19,11 @@ class NullStream implements StreamInterface
 
     public function close() {}
 
-    public function detach() {
-        $this->detached = true;
-    }
+    public function detach() {}
 
-    public function isDetached()
+    public function attach($stream)
     {
-        return $this->detached;
+        throw new CannotAttachException();
     }
 
     public function getSize()

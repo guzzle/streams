@@ -1,5 +1,6 @@
 <?php
 namespace GuzzleHttp\Stream;
+use GuzzleHttp\Stream\Exception\CannotAttachException;
 
 /**
  * Stream decorator trait
@@ -84,9 +85,9 @@ trait StreamDecoratorTrait
         return $this->stream->detach();
     }
 
-    public function isDetached()
+    public function attach($stream)
     {
-        return $this->stream->isDetached();
+        throw new CannotAttachException();
     }
 
     public function getSize()

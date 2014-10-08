@@ -10,7 +10,8 @@ Changelog
 * Move ``GuzzleHttp\Stream\MetadataStreamInterface::getMetadata`` to
   ``GuzzleHttp\Stream\StreamInterface``. MetadataStreamInterface is no longer
   used and is marked as deprecated.
-* Added ``isDetached()`` to ``GuzzleHttp\Stream\StreamInterface``.
+* Added ``attach()`` to ``GuzzleHttp\Stream\StreamInterface`` for PSR-7
+  compatibility.
 * Removed the ``$maxLength`` parameter from
   ``GuzzleHttp\Stream\StreamInterface::getContents()``. This function now
   returns the entire remainder of the stream. If you want to limit the maximum

@@ -126,19 +126,19 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $stream->close();
     }
 
-    public function testCanDetachStream()
+    public function testCanDetachAndAttachStream()
     {
         $r = fopen('php://temp', 'w+');
         $stream = new Stream($r);
-        $this->assertFalse($stream->isDetached());
+        $stream->write('foo');
         $this->assertTrue($stream->isReadable());
         $this->assertSame($r, $stream->detach());
         $this->assertNull($stream->detach());
-        $this->assertTrue($stream->isDetached());
+
         $this->assertFalse($stream->isReadable());
         $this->assertFalse($stream->read(10));
         $this->assertFalse($stream->isWritable());
-        $this->assertFalse($stream->write('foo'));
+        $this->assertFalse($stream->write('bar'));
         $this->assertFalse($stream->isSeekable());
         $this->assertFalse($stream->seek(10));
         $this->assertFalse($stream->tell());
@@ -146,6 +146,14 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($stream->getSize());
         $this->assertSame('', (string) $stream);
         $this->assertSame('', $stream->getContents());
+
+        $stream->attach($r);
+        $stream->seek(0);
+        $this->assertEquals('foo', $stream->getContents());
+        $this->assertTrue($stream->isReadable());
+        $this->assertTrue($stream->isWritable());
+        $this->assertTrue($stream->isSeekable());
+
         $stream->close();
     }
 

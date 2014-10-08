@@ -163,9 +163,7 @@ class AppendStreamTest extends \PHPUnit_Framework_TestCase
     public function testCanDetach()
     {
         $s = new AppendStream();
-        $this->assertFalse($s->isDetached());
         $s->detach();
-        $this->assertTrue($s->isDetached());
     }
 
     public function testReturnsEmptyMetadata()
@@ -173,5 +171,14 @@ class AppendStreamTest extends \PHPUnit_Framework_TestCase
         $s = new AppendStream();
         $this->assertEquals([], $s->getMetadata());
         $this->assertNull($s->getMetadata('foo'));
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Stream\Exception\CannotAttachException
+     */
+    public function testCannotAttach()
+    {
+        $p = new AppendStream();
+        $p->attach('a');
     }
 }

@@ -24,10 +24,17 @@ class NullStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($b->seek(10));
 
         $this->assertTrue($b->eof());
-        $this->assertFalse($b->isDetached());
         $b->detach();
-        $this->assertTrue($b->isDetached());
         $this->assertTrue($b->eof());
         $b->close();
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Stream\Exception\CannotAttachException
+     */
+    public function testCannotAttach()
+    {
+        $p = new NullStream();
+        $p->attach('a');
     }
 }
