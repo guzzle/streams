@@ -59,7 +59,6 @@ class PumpStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($p->isWritable());
         $this->assertNull($p->getSize());
         $this->assertFalse($p->write('aa'));
-        $this->assertFalse($p->flush());
         $this->assertEquals('', $p->getContents());
         $this->assertEquals('', (string) $p);
         $p->close();

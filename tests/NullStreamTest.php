@@ -16,7 +16,6 @@ class NullStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $b->getSize());
         $this->assertEquals('', $b->getContents());
         $this->assertEquals(0, $b->tell());
-        $this->assertFalse($b->flush());
 
         $this->assertTrue($b->isReadable());
         $this->assertTrue($b->isWritable());

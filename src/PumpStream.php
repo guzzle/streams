@@ -104,11 +104,6 @@ class PumpStream implements StreamInterface
         return false;
     }
 
-    public function flush()
-    {
-        return false;
-    }
-
     public function isReadable()
     {
         return true;

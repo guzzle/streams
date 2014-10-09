@@ -7,11 +7,12 @@ Changelog
 
 * Removed ``functions.php``. Use the corresponding functions provided by
   ``GuzzleHttp\Streams\Utils`` instead.
-* Move ``GuzzleHttp\Stream\MetadataStreamInterface::getMetadata`` to
+* Moved ``GuzzleHttp\Stream\MetadataStreamInterface::getMetadata`` to
   ``GuzzleHttp\Stream\StreamInterface``. MetadataStreamInterface is no longer
   used and is marked as deprecated.
 * Added ``attach()`` to ``GuzzleHttp\Stream\StreamInterface`` for PSR-7
   compatibility.
+* Removed ``flush()`` from StreamInterface.
 * Removed the ``$maxLength`` parameter from
   ``GuzzleHttp\Stream\StreamInterface::getContents()``. This function now
   returns the entire remainder of the stream. If you want to limit the maximum
@@ -26,7 +27,6 @@ Changelog
   ``GuzzleHttp\Stream\Utils::create`` no longer accept a size in the second
   argument. They now accept an associative array of options, including the
   "size" key and "metadata" key which can be used to provide custom metadata.
-* Only calling ``fflush()`` on writable streams.
 * Added ``GuzzleHttp\Stream\BufferStream`` to add support for buffering data,
   and when read, shifting data off of the buffer.
 * Added ``GuzzleHttp\Stream\NullBuffer`` which can be used as a buffer that

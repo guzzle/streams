@@ -178,13 +178,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $stream->close();
     }
 
-    public function testFlushes()
-    {
-        $stream = Stream::factory('foo');
-        $this->assertTrue($stream->flush());
-        $stream->close();
-    }
-
     public function testFactoryCreatesFromEmptyString()
     {
         $s = Stream::factory();

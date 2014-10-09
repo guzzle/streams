@@ -121,11 +121,6 @@ class StreamDecoratorTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foofoo', (string) $this->a);
     }
 
-    public function testWrapsFlush()
-    {
-        $this->b->flush();
-    }
-
     /**
      * @expectedException \UnexpectedValueException
      */

@@ -143,11 +143,6 @@ class BufferStream implements StreamInterface
         return strlen($string);
     }
 
-    public function flush()
-    {
-        return false;
-    }
-
     public function getMetadata($key = null)
     {
         if ($key == 'hwm') {

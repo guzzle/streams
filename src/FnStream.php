@@ -15,7 +15,7 @@ class FnStream implements StreamInterface
     /** @var array Methods that must be implemented in the given array */
     private static $slots = ['__toString', 'close', 'detach', 'attach',
         'getSize', 'tell', 'eof', 'isSeekable', 'seek', 'isWritable', 'write',
-        'flush', 'isReadable', 'read', 'getContents', 'getMetadata'];
+        'isReadable', 'read', 'getContents', 'getMetadata'];
 
     /**
      * @param array $methods Hash of method name to a callable.
@@ -123,11 +123,6 @@ class FnStream implements StreamInterface
     public function write($string)
     {
         return call_user_func($this->_fn_write, $string);
-    }
-
-    public function flush()
-    {
-        return call_user_func($this->_fn_flush);
     }
 
     public function isReadable()

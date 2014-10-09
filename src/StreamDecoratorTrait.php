@@ -64,14 +64,8 @@ trait StreamDecoratorTrait
         return $result === $this->stream ? $this : $result;
     }
 
-    /**
-     * Calls flush() and closes the underlying stream.
-     */
     public function close()
     {
-        // Allow the decorated stream to flush any buffered content on close.
-        $this->flush();
-        // Close the decorated stream.
         $this->stream->close();
     }
 
@@ -120,18 +114,8 @@ trait StreamDecoratorTrait
         return $this->stream->isSeekable();
     }
 
-    /**
-     * Calls flush() and seeks to the specified position in the stream.
-     *
-     * {@inheritdoc}
-     */
     public function seek($offset, $whence = SEEK_SET)
     {
-        // Flush the stream before seeking to allow decorators to flush their
-        // state before losing their position in the stream.
-        // see: https://github.com/php/php-src/blob/8b66d64b2343bc4fd8aeabb690024edb850a0155/main/streams/streams.c#L1312
-        $this->flush();
-
         return $this->stream->seek($offset, $whence);
     }
 
@@ -143,11 +127,6 @@ trait StreamDecoratorTrait
     public function write($string)
     {
         return $this->stream->write($string);
-    }
-
-    public function flush()
-    {
-        return $this->stream->flush();
     }
 
     /**

@@ -244,13 +244,6 @@ class Stream implements StreamInterface
         return $this->writable ? fwrite($this->stream, $string) : false;
     }
 
-    public function flush()
-    {
-        return $this->stream && $this->writable
-            ? fflush($this->stream)
-            : false;
-    }
-
     public function getMetadata($key = null)
     {
         if (!$this->stream) {
