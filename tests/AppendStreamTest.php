@@ -118,7 +118,7 @@ class AppendStreamTest extends \PHPUnit_Framework_TestCase
     {
         $a = new AppendStream([
             Stream::factory('foo'),
-            Stream::factory('bar')
+            Stream::factory('bar'),
         ]);
         $this->assertEquals(6, $a->getSize());
 

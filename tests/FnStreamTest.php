@@ -24,7 +24,7 @@ class FnStreamTest extends \PHPUnit_Framework_TestCase
             'read' => function ($len) {
                 $this->assertEquals(3, $len);
                 return 'foo';
-            }
+            },
         ]);
 
         $this->assertEquals('foo', $s->read(3));
@@ -36,7 +36,7 @@ class FnStreamTest extends \PHPUnit_Framework_TestCase
         $s = new FnStream([
             'close' => function () use (&$called) {
                 $called = true;
-            }
+            },
         ]);
         unset($s);
         $this->assertTrue($called);
