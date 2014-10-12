@@ -62,7 +62,7 @@ class LimitStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $this->body->seek(0));
         $this->assertEquals(0, $this->body->tell());
         $this->assertEquals(3, $this->decorated->tell());
-        $this->assertEquals(true, $this->body->seek(-10));
+        $this->assertEquals(false, $this->body->seek(-10));
         $this->assertEquals(0, $this->body->tell());
         $this->assertEquals(3, $this->decorated->tell());
         $this->assertEquals(true, $this->body->seek(5));

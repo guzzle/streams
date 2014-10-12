@@ -60,7 +60,7 @@ class Utils
         if ($maxLen === -1) {
             while (!$stream->eof()) {
                 $buf = $stream->read(1048576);
-                if ($buf === '' || $buf === false) {
+                if ($buf === false) {
                     break;
                 }
                 $buffer .= $buf;
@@ -71,7 +71,7 @@ class Utils
         $len = 0;
         while (!$stream->eof() && $len < $maxLen) {
             $buf = $stream->read($maxLen - $len);
-            if ($buf === '' || $buf === false) {
+            if ($buf === false) {
                 break;
             }
             $buffer .= $buf;
@@ -181,14 +181,16 @@ class Utils
      * Alias of GuzzleHttp\Stream\Stream::factory.
      *
      * @param mixed $resource Resource to create
-     * @param int   $size     Size if known up front
+     * @param array $options  Associative array of stream options defined in
+     *                        {@see \GuzzleHttp\Stream\Stream::__construct}
      *
-     * @return MetadataStreamInterface
+     * @return StreamInterface
      *
      * @see GuzzleHttp\Stream\Stream::factory
+     * @see GuzzleHttp\Stream\Stream::__construct
      */
-    public static function create($resource, $size = null)
+    public static function create($resource, array $options = [])
     {
-        return Stream::factory($resource, $size);
+        return Stream::factory($resource, $options);
     }
 }

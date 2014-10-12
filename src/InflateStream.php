@@ -12,7 +12,7 @@ namespace GuzzleHttp\Stream;
  * @link http://tools.ietf.org/html/rfc1952
  * @link http://php.net/manual/en/filters.compression.php
  */
-class InflateStream implements MetadataStreamInterface
+class InflateStream implements StreamInterface
 {
     use StreamDecoratorTrait;
 

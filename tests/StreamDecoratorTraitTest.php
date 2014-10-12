@@ -85,8 +85,7 @@ class StreamDecoratorTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->b->getContents());
         $this->assertEquals('', $this->b->getContents());
         $this->b->seek(1);
-        $this->assertEquals('o', $this->b->getContents(1));
-        $this->assertEquals('', $this->b->getContents(0));
+        $this->assertEquals('oo', $this->b->getContents(1));
     }
 
     public function testCloses()
@@ -101,6 +100,14 @@ class StreamDecoratorTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->b->isReadable());
     }
 
+    /**
+     * @expectedException \GuzzleHttp\Stream\Exception\CannotAttachException
+     */
+    public function testCannotAttachByDefault()
+    {
+        $this->b->attach('a');
+    }
+
     public function testWrapsMetadata()
     {
         $this->assertSame($this->b->getMetadata(), $this->a->getMetadata());
@@ -112,11 +119,6 @@ class StreamDecoratorTraitTest extends \PHPUnit_Framework_TestCase
         $this->b->seek(0, SEEK_END);
         $this->b->write('foo');
         $this->assertEquals('foofoo', (string) $this->a);
-    }
-
-    public function testWrapsFlush()
-    {
-        $this->b->flush();
     }
 
     /**

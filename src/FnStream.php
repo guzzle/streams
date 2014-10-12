@@ -7,14 +7,14 @@ namespace GuzzleHttp\Stream;
  * Allows for easy testing and extension of a provided stream without needing
  * to create a concrete class for a simple extension point.
  */
-class FnStream implements MetadataStreamInterface
+class FnStream implements StreamInterface
 {
     /** @var array */
     private $methods;
 
     /** @var array Methods that must be implemented in the given array */
-    private static $slots = ['__toString', 'close', 'detach', 'getSize',
-        'tell', 'eof', 'isSeekable', 'seek', 'isWritable', 'write', 'flush',
+    private static $slots = ['__toString', 'close', 'detach', 'attach',
+        'getSize', 'tell', 'eof', 'isSeekable', 'seek', 'isWritable', 'write',
         'isReadable', 'read', 'getContents', 'getMetadata'];
 
     /**
@@ -85,6 +85,11 @@ class FnStream implements MetadataStreamInterface
         return call_user_func($this->_fn_detach);
     }
 
+    public function attach($stream)
+    {
+        return call_user_func($this->_fn_attach, $stream);
+    }
+
     public function getSize()
     {
         return call_user_func($this->_fn_getSize);
@@ -120,11 +125,6 @@ class FnStream implements MetadataStreamInterface
         return call_user_func($this->_fn_write, $string);
     }
 
-    public function flush()
-    {
-        return call_user_func($this->_fn_flush);
-    }
-
     public function isReadable()
     {
         return call_user_func($this->_fn_isReadable);
@@ -135,9 +135,9 @@ class FnStream implements MetadataStreamInterface
         return call_user_func($this->_fn_read, $length);
     }
 
-    public function getContents($maxLength = -1)
+    public function getContents()
     {
-        return call_user_func($this->_fn_getContents, $maxLength);
+        return call_user_func($this->_fn_getContents);
     }
 
     public function getMetadata($key = null)

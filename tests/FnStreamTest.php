@@ -69,7 +69,6 @@ class FnStreamTest extends \PHPUnit_Framework_TestCase
         $b->seek(0, SEEK_END);
         $b->write('bar');
         $this->assertEquals('foobar', (string) $b);
-        $b->flush();
         $this->assertInternalType('resource', $b->detach());
         $b->close();
     }

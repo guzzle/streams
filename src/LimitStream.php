@@ -1,11 +1,12 @@
 <?php
 namespace GuzzleHttp\Stream;
+
 use GuzzleHttp\Stream\Exception\SeekException;
 
 /**
  * Decorator used to return only a subset of a stream
  */
-class LimitStream implements StreamInterface, MetadataStreamInterface
+class LimitStream implements StreamInterface
 {
     use StreamDecoratorTrait;
 
@@ -34,15 +35,22 @@ class LimitStream implements StreamInterface, MetadataStreamInterface
 
     public function eof()
     {
+        // Always return true if the underlying stream is EOF
+        if ($this->stream->eof()) {
+            return true;
+        }
+
+        // No limit and the underlying stream is not at EOF
         if ($this->limit == -1) {
-            return $this->stream->eof();
+            return false;
         }
 
         $tell = $this->stream->tell();
+        if ($tell === false) {
+            return false;
+        }
 
-        return $tell === false ||
-            ($tell >= $this->offset + $this->limit) ||
-            $this->stream->eof();
+        return $tell >= $this->offset + $this->limit;
     }
 
     /**
@@ -66,18 +74,16 @@ class LimitStream implements StreamInterface, MetadataStreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        if ($whence != SEEK_SET) {
+        if ($whence !== SEEK_SET || $offset < 0) {
             return false;
         }
 
-        if ($offset < 0) {
-            $offset = $this->offset;
-        } else {
-            $offset += $this->offset;
-        }
+        $offset += $this->offset;
 
-        if ($this->limit !== -1 && $offset > ($this->offset + $this->limit)) {
-            $offset = $this->offset + $this->limit;
+        if ($this->limit !== -1) {
+            if ($offset > $this->offset + $this->limit) {
+                $offset = $this->offset + $this->limit;
+            }
         }
 
         return $this->stream->seek($offset);

@@ -85,11 +85,6 @@ class GuzzleStreamWrapper
         return $this->stream->eof();
     }
 
-    public function stream_flush()
-    {
-        return $this->stream->flush();
-    }
-
     public function stream_seek($offset, $whence)
     {
         return $this->stream->seek($offset, $whence);
