@@ -4,7 +4,8 @@ Guzzle Streams
 
 Provides a simple abstraction over streams of data.
 
-This library is used in `Guzzle 4 <https://github.com/guzzle/guzzle>`_.
+This library is used in `Guzzle 5 <https://github.com/guzzle/guzzle>`_, and is
+(currently) compatible with the WIP PSR-7.
 
 Installation
 ============

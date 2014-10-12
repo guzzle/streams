@@ -2,9 +2,11 @@
 Changelog
 =========
 
-3.0.0 (TBD)
------------
+3.0.0 (2014-10-12)
+------------------
 
+* Now supports creating streams from functions and iterators.
+* Supports creating buffered streams and asynchronous streams.
 * Removed ``functions.php``. Use the corresponding functions provided by
   ``GuzzleHttp\Streams\Utils`` instead.
 * Moved ``GuzzleHttp\Stream\MetadataStreamInterface::getMetadata`` to
