@@ -17,7 +17,6 @@ class BufferStream implements StreamInterface
 {
     private $hwm;
     private $buffer = '';
-    private $detached = false;
 
     /**
      * @param int $hwm High water mark, representing the preferred maximum
@@ -31,11 +30,6 @@ class BufferStream implements StreamInterface
         $this->hwm = $hwm;
     }
 
-    public function __destruct()
-    {
-        $this->close();
-    }
-
     public function __toString()
     {
         return $this->getContents();
@@ -43,7 +37,7 @@ class BufferStream implements StreamInterface
 
     public function getContents()
     {
-        $buffer = $this->detached ? '' : $this->buffer;
+        $buffer = $this->buffer;
         $this->buffer = '';
 
         return $buffer;
@@ -51,8 +45,6 @@ class BufferStream implements StreamInterface
 
     public function close()
     {
-        $this->detached = true;
-        $this->pos = 0;
         $this->buffer = '';
     }
 
@@ -106,10 +98,6 @@ class BufferStream implements StreamInterface
      */
     public function read($length)
     {
-        if ($this->detached) {
-            return false;
-        }
-
         $currentLength = strlen($this->buffer);
 
         if ($length >= $currentLength) {
@@ -130,10 +118,6 @@ class BufferStream implements StreamInterface
      */
     public function write($string)
     {
-        if ($this->detached) {
-            return false;
-        }
-
         $this->buffer .= $string;
 
         if (strlen($this->buffer) >= $this->hwm) {
@@ -147,10 +131,8 @@ class BufferStream implements StreamInterface
     {
         if ($key == 'hwm') {
             return $this->hwm;
-        } elseif ($key) {
-            return null;
-        } else {
-            return [];
         }
+
+        return $key ? null : [];
     }
 }

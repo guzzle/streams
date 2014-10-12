@@ -38,15 +38,15 @@ class BufferStreamTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($b->tell());
     }
 
-    public function testCanDetach()
+    public function testDetachClearsBuffer()
     {
         $b = new BufferStream();
         $b->write('foo');
         $b->detach();
         $this->assertEquals(0, $b->tell());
         $this->assertTrue($b->eof());
-        $this->assertFalse($b->write('abc'));
-        $this->assertFalse($b->read(10));
+        $this->assertEquals(3, $b->write('abc'));
+        $this->assertEquals('abc', $b->read(10));
     }
 
     public function testExceedingHighwaterMarkReturnsFalseButStillBuffers()
