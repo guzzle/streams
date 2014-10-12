@@ -172,7 +172,7 @@ class AsyncReadStreamTest extends \PHPUnit_Framework_TestCase
                 $this->assertSame($buf, $b);
                 $this->assertEquals('foo', $data);
                 $c++;
-            }
+            },
         ]);
         $this->assertInstanceOf('GuzzleHttp\Stream\FnStream', $buffer);
         $this->assertInstanceOf('GuzzleHttp\Stream\AsyncReadStream', $async);

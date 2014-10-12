@@ -37,7 +37,7 @@ class GuzzleStreamWrapper
         }
 
         return fopen('guzzle://stream', $mode, null, stream_context_create([
-            'guzzle' => ['stream' => $stream]
+            'guzzle' => ['stream' => $stream],
         ]));
     }
 
@@ -95,7 +95,7 @@ class GuzzleStreamWrapper
         static $modeMap = [
             'r'  => 33060,
             'r+' => 33206,
-            'w'  => 33188
+            'w'  => 33188,
         ];
 
         return [
