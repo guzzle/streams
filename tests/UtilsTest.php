@@ -73,17 +73,24 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 
     public function testReadsLines()
     {
-        $s = Stream::factory("foo\nbaz\nbar");
-        $this->assertEquals("foo\n", Utils::readline($s));
-        $this->assertEquals("baz\n", Utils::readline($s));
+        $s = Stream::factory("foo" . PHP_EOL . "baz" . PHP_EOL . "bar");
+        $this->assertEquals("foo" . PHP_EOL, Utils::readline($s));
+        $this->assertEquals("baz" . PHP_EOL, Utils::readline($s));
         $this->assertEquals("bar", Utils::readline($s));
     }
 
     public function testReadsLinesUpToMaxLength()
     {
-        $s = Stream::factory("12345\n");
-        $this->assertEquals("123", Utils::readline($s, 4));
-        $this->assertEquals("45\n", Utils::readline($s));
+        $s = Stream::factory("12345" . PHP_EOL);
+        $this->assertEquals("123", Utils::readline($s, 3));
+        $this->assertEquals("45" . PHP_EOL, Utils::readline($s));
+    }
+
+    public function testReadsLinesWithCustomEol()
+    {
+        $s = Stream::factory("foo\tbaz\t\tbar");
+        $this->assertEquals("foo\tbaz\t\t", Utils::readline($s, null, "\t\t"));
+        $this->assertEquals("bar", Utils::readline($s));
     }
 
     public function testReadsLineUntilFalseReturnedFromRead()
