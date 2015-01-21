@@ -31,6 +31,7 @@ class LimitStreamTest extends \PHPUnit_Framework_TestCase
         $body->seek(0);
         $this->assertFalse($body->eof());
         $this->assertEquals('oo', $body->read(100));
+        $this->assertEmpty($body->read(1));
         $this->assertTrue($body->eof());
     }
 
