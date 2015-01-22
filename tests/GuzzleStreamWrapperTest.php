@@ -18,6 +18,7 @@ class GuzzleStreamWrapperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(3, fwrite($handle, 'bar'));
         $this->assertSame(0, fseek($handle, 0));
         $this->assertSame('foobar', fread($handle, 6));
+        $this->assertEmpty(fread($handle, 1));
         $this->assertTrue(feof($handle));
 
         // This fails on HHVM for some reason
