@@ -157,7 +157,7 @@ class Utils
      * @param int             $maxLength Maximum buffer length
      * @param string          $eol       Line ending
      *
-     * @return string|bool
+     * @return string
      */
     public static function readline(StreamInterface $stream, $maxLength = null, $eol = PHP_EOL)
     {
