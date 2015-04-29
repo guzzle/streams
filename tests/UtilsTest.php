@@ -93,6 +93,15 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("bar", Utils::readline($s));
     }
 
+    public function testReadLinesReturnFalseOnEol()
+    {
+        $s = Stream::factory("foo" . PHP_EOL . PHP_EOL . "bar");
+        $this->assertEquals("foo" . PHP_EOL, Utils::readline($s));
+        $this->assertEquals(PHP_EOL, Utils::readline($s));
+        $this->assertEquals("bar", Utils::readline($s));
+        $this->assertFalse(Utils::readline($s));
+    }
+
     public function testReadsLineUntilFalseReturnedFromRead()
     {
         $s = $this->getMockBuilder('GuzzleHttp\Stream\Stream')
