@@ -161,11 +161,15 @@ class Utils
      */
     public static function readline(StreamInterface $stream, $maxLength = null, $eol = PHP_EOL)
     {
+        if ($stream->eof()) {
+            return false;
+        }
+
         $buffer = '';
         $size = 0;
         $negEolLen = -strlen($eol);
 
-        while (!$stream->eof()) {
+        do {
             if (false === ($byte = $stream->read(1))) {
                 return $buffer;
             }
@@ -174,7 +178,7 @@ class Utils
             if (++$size == $maxLength || substr($buffer, $negEolLen) === $eol) {
                 break;
             }
-        }
+        } while (!$stream->eof());
 
         return $buffer;
     }
