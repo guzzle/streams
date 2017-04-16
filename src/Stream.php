@@ -258,4 +258,14 @@ class Stream implements StreamInterface
 
         return isset($meta[$key]) ? $meta[$key] : null;
     }
+
+    /**
+     * Get the stream resource
+     *
+     * @return  resource
+     */
+    public function getStream()
+    {
+        return $this->stream;
+    }
 }
