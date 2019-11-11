@@ -27,7 +27,7 @@ Documentation
 =============
 
 The documentation for this package can be found on the main Guzzle website at
-http://docs.guzzlephp.org/en/guzzle4/streams.html.
+http://docs.guzzlephp.org/en/5.3/streams.html.
 
 Testing
 =======
